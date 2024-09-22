@@ -65,7 +65,7 @@ export default function CreateFormBtn() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="bg-purples group border-primary/20 h-[140px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer gap-4 shadow-box border-2 border-darks2">
+                <Button className="bg-purples group border-primary/20 h-full min-h-[140px] items-center rounded-lg justify-center flex flex-col hover:border-primary hover:cursor-pointer gap-4 shadow-box border-2 border-darks2">
                     <BsFileEarmarkPlus className="h-8 w-8 group-hover:text-muted-foreground" />
                     <p className="font-semibold">Buat formulir baru</p>
                 </Button>

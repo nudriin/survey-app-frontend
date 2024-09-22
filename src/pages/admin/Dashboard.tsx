@@ -1,7 +1,24 @@
 import CreateFormBtn from '@/components/CreateFormBtn';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { FormResponse } from '@/model/FormModel';
+import { formatDistance } from 'date-fns';
+import { useCallback, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { BsEyeFill } from 'react-icons/bs';
+import { FaEdit, FaWpforms } from 'react-icons/fa';
+import { BiRightArrowAlt } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
     return (
@@ -23,30 +40,30 @@ export default function Dashboard() {
 function StatsCards() {
     return (
         <DashboardLayout>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
                 <StatsCard
                     title="Total Visit"
                     value="0"
                     helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-purples"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-purples"
                 />
                 <StatsCard
                     title="Total Response"
                     value="0"
                     helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-oranges"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-oranges"
                 />
                 <StatsCard
                     title="Response Rate"
                     value="0"
                     helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-greens"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-greens"
                 />
                 <StatsCard
                     title="Bounce Rate"
                     value="0"
                     helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-teals"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-teals"
                 />
             </div>
         </DashboardLayout>
@@ -78,33 +95,86 @@ function StatsCard({
 }
 
 function FormsCards() {
-    const forms = [
-        {
-            name: 'Form1',
-        },
-        {
-            name: 'Form2',
-        },
-        {
-            name: 'Form3',
-        },
-    ];
+    const [forms, setForms] = useState<FormResponse[]>([]);
+    const [cookie] = useCookies(['auth']);
+    const token = cookie.auth;
 
+    const getAllForms = useCallback(async () => {
+        try {
+            const response = await fetch('/api/v1/forms', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const body = await response.json();
+            if (!body.errors) {
+                setForms(body.data);
+            } else {
+                throw new Error(body.errors);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        getAllForms();
+    }, [getAllForms]);
     return (
         <>
             {forms.map((value, index) => (
-                <FormsCard key={index} name={value.name} />
+                <FormsCard key={index} form={value} />
             ))}
         </>
     );
 }
 
-function FormsCard({ name }: { name: string }) {
+function FormsCard({ form }: { form: FormResponse }) {
     return (
-        <Card className="group border-primary/20 h-[140px] items-center justify-center flex flex-col hover:border-primary rounded-lg hover:cursor-pointer gap-4 shadow-box border-2 border-darks2">
+        <Card className="group border-primary/20 h-full rounded-lg hover:cursor-pointer gap-4 shadow-box border-2 border-darks2 text-left">
             <CardHeader>
-                <CardTitle>{name}</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                    <span className="truncate">{form.name}</span>
+                    {form.published && <Badge>Publish</Badge>}
+                    {!form.published && (
+                        <Badge variant="destructive">Draft</Badge>
+                    )}
+                </CardTitle>
+                <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
+                    {formatDistance(form.createdAt, new Date(), {
+                        addSuffix: true,
+                    })}
+                    {form.published && (
+                        <span className="flex items-center gap-2">
+                            <BsEyeFill className="text-muted-foreground" />
+                            <span>{form.visit}</span>
+                            <FaWpforms className="text-muted-foreground" />
+                            <span>{form.submissions}</span>
+                        </span>
+                    )}
+                </CardDescription>
             </CardHeader>
+            <CardContent className="truncate">
+                {form.description || 'Tidak ada deskripsi'}
+            </CardContent>
+            <CardFooter>
+                {form.published && (
+                    <Button asChild className="gap-2 bg-purples w-full">
+                        <Link to={`/forms/${form.id}`}>
+                            Lihat Jawaban <BiRightArrowAlt />
+                        </Link>
+                    </Button>
+                )}
+                {!form.published && (
+                    <Button asChild className="gap-2 bg-oranges w-full">
+                        <Link to={`/build/${form.id}`}>
+                            Edit Formulir <FaEdit />
+                        </Link>
+                    </Button>
+                )}
+            </CardFooter>
         </Card>
     );
 }
