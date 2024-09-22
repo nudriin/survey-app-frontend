@@ -23,7 +23,7 @@ import { z } from 'zod';
 import { Textarea } from './ui/textarea';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { toast } from '@/hooks/use-toast';
-
+import { BsFileEarmarkPlus } from 'react-icons/bs';
 const formSchema = z.object({
     name: z.string().min(2, {
         message: 'Nama minimal 2 karakter',
@@ -53,7 +53,10 @@ export default function CreateFormBtn() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="bg-purples">Buat formulir baru</Button>
+                <Button className="bg-purples group border-primary/20 h-[140px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer gap-4 shadow-box border-2 border-darks2">
+                    <BsFileEarmarkPlus className="h-8 w-8 group-hover:text-muted-foreground" />
+                    <p className="font-semibold">Buat formulir baru</p>
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="text-left">
