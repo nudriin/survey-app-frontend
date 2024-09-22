@@ -23,6 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Email tidak valid' }).min(1).max(225),
@@ -47,6 +48,7 @@ export default function Login() {
 
     const [, setCookie] = useCookies(['auth']);
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const handleFormSubmit = async (value: formSchemaType) => {
         console.log(value);
@@ -57,6 +59,7 @@ export default function Login() {
                 title: 'Sukses',
                 description: 'Login berhasil',
             });
+            navigate('/');
         } catch (error) {
             toast({
                 title: 'Error',
