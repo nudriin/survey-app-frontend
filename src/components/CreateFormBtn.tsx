@@ -24,6 +24,8 @@ import { Textarea } from './ui/textarea';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { toast } from '@/hooks/use-toast';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
+import { FormResponse } from '@/model/FormModel';
+import { useCookies } from 'react-cookie';
 const formSchema = z.object({
     name: z.string().min(2, {
         message: 'Nama minimal 2 karakter',
@@ -40,10 +42,16 @@ export default function CreateFormBtn() {
             description: '',
         },
     });
+    const [cookie] = useCookies(['auth']);
+    const token = cookie.auth;
 
-    const handleFormSubmit = (values: formSchemaType) => {
+    const handleFormSubmit = async (values: formSchemaType) => {
         try {
-            console.log(values);
+            await saveForm(values, token);
+            toast({
+                title: 'Sukses',
+                description: 'Form berhasil dibuat',
+            });
         } catch (error) {
             console.log(error);
             toast({
@@ -113,4 +121,25 @@ export default function CreateFormBtn() {
             </DialogContent>
         </Dialog>
     );
+}
+
+async function saveForm(
+    request: formSchemaType,
+    token: string
+): Promise<FormResponse> {
+    const response = await fetch('/api/v1/forms', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(request),
+    });
+
+    const body = await response.json();
+    if (body.errors) {
+        throw new Error(body.errors);
+    }
+
+    return body.data;
 }
