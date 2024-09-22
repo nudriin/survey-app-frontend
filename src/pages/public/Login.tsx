@@ -17,7 +17,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { UserResponse } from '@/model/UserModel';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -46,6 +46,7 @@ export default function Login() {
     });
 
     const [, setCookie] = useCookies(['auth']);
+    const { toast } = useToast();
 
     const handleFormSubmit = async (value: formSchemaType) => {
         console.log(value);
@@ -53,12 +54,12 @@ export default function Login() {
             const response = await fetchLogin(value);
             setCookie('auth', response.token);
             toast({
-                title: 'Success',
+                title: 'Sukses',
                 description: 'Login berhasil',
             });
         } catch (error) {
             toast({
-                title: 'Success',
+                title: 'Error',
                 description: `${error}`,
                 variant: 'destructive',
             });
