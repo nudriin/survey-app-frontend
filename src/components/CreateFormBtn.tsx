@@ -26,6 +26,7 @@ import { toast } from '@/hooks/use-toast';
 import { BsFileEarmarkPlus } from 'react-icons/bs';
 import { FormResponse } from '@/model/FormModel';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 const formSchema = z.object({
     name: z.string().min(2, {
         message: 'Nama minimal 2 karakter',
@@ -44,14 +45,16 @@ export default function CreateFormBtn() {
     });
     const [cookie] = useCookies(['auth']);
     const token = cookie.auth;
+    const navigate = useNavigate();
 
     const handleFormSubmit = async (values: formSchemaType) => {
         try {
-            await saveForm(values, token);
+            const response = await saveForm(values, token);
             toast({
                 title: 'Sukses',
                 description: 'Form berhasil dibuat',
             });
+            navigate(`/build/${response.id}`);
         } catch (error) {
             console.log(error);
             toast({
