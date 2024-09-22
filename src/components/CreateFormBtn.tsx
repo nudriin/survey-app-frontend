@@ -35,6 +35,10 @@ type formSchemaType = z.infer<typeof formSchema>;
 export default function CreateFormBtn() {
     const form = useForm<formSchemaType>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: '',
+            description: '',
+        },
     });
 
     const handleFormSubmit = (values: formSchemaType) => {
