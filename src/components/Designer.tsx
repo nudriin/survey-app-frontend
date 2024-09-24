@@ -14,8 +14,13 @@ import { Button } from './ui/button';
 import { BiSolidTrash } from 'react-icons/bi';
 
 export default function Designer() {
-    const { elements, addElement, selectedElement, setSelectedElement } =
-        useDesigner();
+    const {
+        elements,
+        addElement,
+        selectedElement,
+        setSelectedElement,
+        removeElement,
+    } = useDesigner();
     const droppable = useDroppable({
         id: 'drop-area',
         data: {
@@ -30,13 +35,91 @@ export default function Designer() {
             const isDesignerBtnElement =
                 active?.data?.current?.isDesignerBtnElement;
 
-            if (isDesignerBtnElement) {
+            const isDropOverDesignerDropArea = over?.data?.current?.isDropArea;
+
+            // First Scenario
+            const dropSidebarBtnOverDesignerDropArea =
+                isDesignerBtnElement && isDropOverDesignerDropArea;
+
+            if (dropSidebarBtnOverDesignerDropArea) {
                 const type = active?.data?.current?.type;
                 const newElement = FormElements[type as ElementsType].construct(
                     idGenerator()
                 );
 
-                addElement(0, newElement);
+                addElement(elements.length, newElement);
+
+                return;
+            }
+
+            const isDropOverDesignerElementTopHalf =
+                over?.data?.current?.isTopHalfElement;
+            const isDropOverDesignerElementBottomHalf =
+                over?.data?.current?.isBottomHalfElement;
+
+            const isDropOverDesignerElement =
+                isDropOverDesignerElementTopHalf ||
+                isDropOverDesignerElementBottomHalf;
+
+            const dropSidebarBtnOverDesignerElement =
+                isDesignerBtnElement && isDropOverDesignerElement;
+
+            // Second Scenario
+            if (dropSidebarBtnOverDesignerElement) {
+                const type = active?.data?.current?.type;
+                const newElement = FormElements[type as ElementsType].construct(
+                    idGenerator()
+                );
+
+                const overId = over?.data?.current?.elementId;
+                const overElementIndex = elements.findIndex(
+                    (el) => el.id == overId
+                );
+
+                if (overElementIndex === -1) {
+                    throw new Error('element not found');
+                }
+
+                let indexNewElement = overElementIndex;
+
+                if (isDropOverDesignerElementBottomHalf) {
+                    indexNewElement = overElementIndex + 1;
+                }
+                addElement(indexNewElement, newElement);
+
+                return;
+            }
+
+            // Third Scenario
+            const isDraggingDesignerElement =
+                active.data?.current?.isDesignerElement;
+            const draggingDesignerElementOverAnotherDesignerElement =
+                isDropOverDesignerElement && isDraggingDesignerElement;
+
+            if (draggingDesignerElementOverAnotherDesignerElement) {
+                const activeId = active.data?.current?.elementId;
+                const overId = over.data?.current?.elementId;
+
+                const activeElementIndex = elements.findIndex(
+                    (el) => el.id === activeId
+                );
+                const overElementIndex = elements.findIndex(
+                    (el) => el.id === overId
+                );
+
+                if (activeElementIndex === -1 || overElementIndex === -1) {
+                    throw new Error('element not found');
+                }
+
+                const activeElement = { ...elements[activeElementIndex] };
+                removeElement(activeId);
+
+                let indexNewElement = overElementIndex;
+
+                if (isDropOverDesignerElementBottomHalf) {
+                    indexNewElement = overElementIndex + 1;
+                }
+                addElement(indexNewElement, activeElement);
             }
         },
     });
