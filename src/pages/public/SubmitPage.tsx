@@ -40,10 +40,5 @@ export default function SumbitPage() {
     const formContent = JSON.parse(
         forms?.content ?? '[]'
     ) as FormElementInstance[];
-    return (
-        <FormSubmitComponent
-            formURL={forms?.shareURL ?? ''}
-            content={formContent}
-        />
-    );
+    return <FormSubmitComponent form={forms} content={formContent} />;
 }

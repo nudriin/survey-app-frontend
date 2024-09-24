@@ -242,7 +242,7 @@ function FormComponent({
     const { label, helperText, required, placeholder } = element.extraAttr;
 
     return (
-        <div className="flex flex-col gap-2 w-full items-start">
+        <div className="flex flex-col text-left gap-2 w-full items-start">
             <Label className="font-semibold">
                 {label}
                 {required && <span className="text-red-500"> *</span>}
