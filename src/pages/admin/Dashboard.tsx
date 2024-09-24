@@ -42,28 +42,28 @@ function StatsCards() {
         <DashboardLayout>
             <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
                 <StatsCard
-                    title="Total Visit"
+                    title="Total Kunjungan"
                     value="0"
-                    helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-purples"
+                    helperText="Jumlah total data kunjungan pada seluruh formulir"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
                 />
                 <StatsCard
-                    title="Total Response"
+                    title="Total Jawaban"
                     value="0"
-                    helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-oranges"
+                    helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
                 />
                 <StatsCard
-                    title="Response Rate"
+                    title="Kunjungan Bulan Ini"
                     value="0"
-                    helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-greens"
+                    helperText="Jumlah total kunjungan pada seluruh formulir dalam bulan ini"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
                 />
                 <StatsCard
-                    title="Bounce Rate"
+                    title="Jawaban Bulan ini"
                     value="0"
-                    helperText="Total visits"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-teals"
+                    helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
+                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
                 />
             </div>
         </DashboardLayout>
@@ -87,8 +87,10 @@ function StatsCard({
                 <CardTitle className="">{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <h1 className="text-3xl font-bold m-0">{value}</h1>
-                <p>{helperText}</p>
+                <h1 className="text-4xl font-bold my-2 text-purples">
+                    {value}
+                </h1>
+                <p className="text-sm text-muted-foreground">{helperText}</p>
             </CardContent>
         </Card>
     );
@@ -161,14 +163,17 @@ function FormsCard({ form }: { form: FormResponse }) {
             </CardContent>
             <CardFooter>
                 {form.published && (
-                    <Button asChild className="gap-2 bg-purples w-full">
+                    <Button asChild className=" gap-2 bg-purples w-full">
                         <Link to={`/forms/${form.id}`}>
                             Lihat Jawaban <BiRightArrowAlt />
                         </Link>
                     </Button>
                 )}
                 {!form.published && (
-                    <Button asChild className="gap-2 bg-oranges w-full">
+                    <Button
+                        asChild
+                        className="gap-2 bg-muted-foreground w-full"
+                    >
                         <Link to={`/build/${form.id}`}>
                             Edit Formulir <FaEdit />
                         </Link>

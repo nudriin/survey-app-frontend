@@ -22,28 +22,28 @@ function StatsCards({ forms }: { forms: FormResponse | undefined }) {
     return (
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
             <StatsCard
-                title="Total Visit"
+                title="Total Kunjungan"
                 value={forms?.visit.toString() ?? '0'}
-                helperText="Total visits"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-purples"
+                helperText="Jumlah total data kunjungan pada formulir"
+                className="shadow-box border-2 border-darks2 rounded-lg text-left"
             />
             <StatsCard
-                title="Total Response"
+                title="Total Jawaban"
                 value={forms?.submissions.toString() ?? '0'}
-                helperText="Total visits"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-oranges"
+                helperText="Jumlah total jawaban yang diterima pada formulir"
+                className="shadow-box border-2 border-darks2 rounded-lg text-left"
             />
             <StatsCard
-                title="Response Rate"
+                title="Kunjungan Bulan Ini"
                 value="0"
-                helperText="Total visits"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-greens"
+                helperText="Jumlah total kunjungan pada formulir dalam bulan ini"
+                className="shadow-box border-2 border-darks2 rounded-lg text-left"
             />
             <StatsCard
-                title="Bounce Rate"
+                title="Jawaban Bulan ini"
                 value="0"
-                helperText="Total visits"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left text-white bg-teals"
+                helperText="Jumlah total jawaban yang diterima pada formulir dalam bulan ini"
+                className="shadow-box border-2 border-darks2 rounded-lg text-left"
             />
         </div>
     );
@@ -66,8 +66,10 @@ function StatsCard({
                 <CardTitle className="">{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <h1 className="text-3xl font-bold m-0">{value}</h1>
-                <p>{helperText}</p>
+                <h1 className="text-4xl font-bold my-2 text-purples">
+                    {value}
+                </h1>
+                <p className="text-sm text-muted-foreground">{helperText}</p>
             </CardContent>
         </Card>
     );
