@@ -51,7 +51,7 @@ export const TextFieldFormElement: FormElement = {
     },
 
     designerComponent: DesignerComponent,
-    formComponent: () => <div>Form Component</div>,
+    formComponent: FormComponent,
     propertiesComponent: PropertiesComponent,
 };
 
@@ -230,5 +230,27 @@ function PropertiesComponent({
                 />
             </form>
         </Form>
+    );
+}
+
+function FormComponent({
+    elementInstance,
+}: {
+    elementInstance: FormElementInstance;
+}) {
+    const element = elementInstance as CustomInstance;
+    const { label, helperText, required, placeholder } = element.extraAttr;
+
+    return (
+        <div className="flex flex-col gap-2 w-full items-start">
+            <Label className="font-semibold">
+                {label}
+                {required && '*'}
+            </Label>
+            <Input className="border border-darks2" placeholder={placeholder} />
+            {helperText && (
+                <p className="text-muted-foreground text-sm">{helperText}</p>
+            )}
+        </div>
     );
 }
