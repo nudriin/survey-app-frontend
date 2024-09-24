@@ -125,6 +125,7 @@ export default function Designer() {
     });
     return (
         <div className="flex w-full h-full">
+            <DesignerSidebar />
             <div
                 className="p-4 w-full"
                 onClick={() => {
@@ -160,7 +161,6 @@ export default function Designer() {
                     )}
                 </div>
             </div>
-            <DesignerSidebar />
         </div>
     );
 }

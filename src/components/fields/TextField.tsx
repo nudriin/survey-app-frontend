@@ -71,7 +71,7 @@ function DesignerComponent({
         <div className="flex flex-col gap-2 w-full items-start">
             <Label className="font-semibold">
                 {label}
-                {required && '*'}
+                {required && <span className="text-red-500"> *</span>}
             </Label>
             <Input
                 className="border border-darks2"
@@ -245,7 +245,7 @@ function FormComponent({
         <div className="flex flex-col gap-2 w-full items-start">
             <Label className="font-semibold">
                 {label}
-                {required && '*'}
+                {required && <span className="text-red-500"> *</span>}
             </Label>
             <Input className="border border-darks2" placeholder={placeholder} />
             {helperText && (
