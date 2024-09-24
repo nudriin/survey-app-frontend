@@ -26,10 +26,10 @@ export default function PreviewDialogBtn() {
                 <div className="bg-accent flex flex-col flex-grow items-center justify-center p-4 overflow-y-auto bg-[url(/paper.svg)]">
                     <div className="max-w-[650px] flex flex-col gap-4 flex-grow bg-background h-full w-full rounded-lg p-6 overflow-y-auto">
                         {elements.map((element) => {
-                            const FormComonent =
+                            const FormComponent =
                                 FormElements[element.type].formComponent;
                             return (
-                                <FormComonent
+                                <FormComponent
                                     key={element.id}
                                     elementInstance={element}
                                 />

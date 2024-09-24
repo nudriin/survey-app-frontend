@@ -93,6 +93,11 @@ function FormSubmissions() {
             }
         } catch (error) {
             console.log(error);
+            toast({
+                title: 'Error',
+                description: `${error}`,
+                variant: 'destructive',
+            });
         }
     }, [formId]);
 

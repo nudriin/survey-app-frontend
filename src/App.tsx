@@ -4,6 +4,7 @@ import Dashboard from './pages/admin/Dashboard';
 import Login from './pages/public/Login';
 import Builder from './pages/admin/Builder';
 import FormDetail from './pages/admin/FormDetail';
+import SumbitPage from './pages/public/SubmitPage';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/build/:formId" element={<Builder />} />
                 <Route path="/forms/:formId" element={<FormDetail />} />
+                <Route path="/form/:shareURL" element={<SumbitPage />} />
             </Routes>
         </BrowserRouter>
     );
