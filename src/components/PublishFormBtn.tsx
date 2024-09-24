@@ -16,12 +16,14 @@ import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import useDesigner from '@/hooks/useDesigner';
 
 export default function PublishFormBtn({ id }: { id: number | undefined }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [cookie] = useCookies(['auth']);
     const token = cookie.auth;
     const navigate = useNavigate();
+    const { elements } = useDesigner();
 
     const publishForm = async () => {
         try {
@@ -34,6 +36,7 @@ export default function PublishFormBtn({ id }: { id: number | undefined }) {
                 },
                 body: JSON.stringify({
                     id: id,
+                    content: JSON.stringify(elements),
                     published: true,
                 }),
             });
