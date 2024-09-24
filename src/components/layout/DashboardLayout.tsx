@@ -1,7 +1,5 @@
 import { ReactNode } from 'react';
 import tutWuriImg from '../../assets/images/web/tut_wuri.png';
-import { Toaster } from '../ui/toaster';
-
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     return (
         <section>
@@ -25,7 +23,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </div>
             </header>
             <main>{children}</main>
-            <Toaster />
         </section>
     );
 }

@@ -20,6 +20,8 @@ import { Button } from './ui/button';
 import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import Confetti from 'react-confetti';
+import DashboardLayout from './layout/DashboardLayout';
+import { GoHome } from 'react-icons/go';
 
 export default function FormBuilder({
     form,
@@ -125,29 +127,40 @@ export default function FormBuilder({
 
     return (
         <DndContext sensors={sensors}>
-            <main className="flex flex-col w-full">
-                <nav className="flex justify-between border-b-2 p-4 gap-4 items-center">
-                    <h2 className="truncate font-semibold">
-                        <span className="text-muted-foreground">
-                            Formulir:{' '}
-                        </span>
-                        {form?.name}
-                    </h2>
-                    <div className="flex gap-2 items-center">
-                        <PreviewDialogBtn />
-                        {!form?.published && (
-                            <>
-                                <SaveFormBtn id={form?.id} />
-                                <PublishFormBtn id={form?.id} />
-                            </>
-                        )}
+            <DashboardLayout>
+                <main className="flex flex-col w-full">
+                    <nav className="flex justify-between border-b-2 p-4 gap-4 items-center">
+                        <h2 className="truncate font-semibold">
+                            <span className="text-muted-foreground">
+                                Formulir:{' '}
+                            </span>
+                            {form?.name}
+                        </h2>
+                        <div className="flex gap-2 items-center">
+                            <Button
+                                variant={'outline'}
+                                className="gap-2"
+                                asChild
+                            >
+                                <Link to="/" className="items-center">
+                                    Dashboard <GoHome />
+                                </Link>
+                            </Button>
+                            <PreviewDialogBtn />
+                            {!form?.published && (
+                                <>
+                                    <SaveFormBtn id={form?.id} />
+                                    <PublishFormBtn id={form?.id} />
+                                </>
+                            )}
+                        </div>
+                    </nav>
+                    <div className="flex w-full flex-grow items-center justify-center relative overflow-auto min-h-screen bg-accent bg-[url(/paper.svg)]">
+                        <Designer />
                     </div>
-                </nav>
-                <div className="flex w-full flex-grow items-center justify-center relative overflow-auto min-h-screen bg-accent bg-[url(/paper.svg)]">
-                    <Designer />
-                </div>
-            </main>
-            <DragOverlayWrapper />
+                </main>
+                <DragOverlayWrapper />
+            </DashboardLayout>
         </DndContext>
     );
 }

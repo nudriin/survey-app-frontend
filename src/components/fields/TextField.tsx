@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { ElementsType, FormElement, FormElementInstance } from '../FormElement';
 import { MdTextFields } from 'react-icons/md';
 import { Label } from '../ui/label';
