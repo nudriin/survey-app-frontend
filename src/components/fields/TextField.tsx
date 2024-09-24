@@ -76,7 +76,6 @@ function DesignerComponent({
             <Input
                 className="border border-darks2"
                 readOnly
-                disabled
                 placeholder={placeholder}
             />
             {helperText && (
