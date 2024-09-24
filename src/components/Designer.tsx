@@ -14,7 +14,8 @@ import { Button } from './ui/button';
 import { BiSolidTrash } from 'react-icons/bi';
 
 export default function Designer() {
-    const { elements, addElement } = useDesigner();
+    const { elements, addElement, selectedElement, setSelectedElement } =
+        useDesigner();
     const droppable = useDroppable({
         id: 'drop-area',
         data: {
@@ -41,7 +42,12 @@ export default function Designer() {
     });
     return (
         <div className="flex w-full h-full">
-            <div className="p-4 w-full">
+            <div
+                className="p-4 w-full"
+                onClick={() => {
+                    if (selectedElement) setSelectedElement(null);
+                }}
+            >
                 <div
                     ref={droppable.setNodeRef}
                     className={cn(
@@ -77,7 +83,7 @@ export default function Designer() {
 }
 
 function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
-    const { removeElement } = useDesigner();
+    const { removeElement, setSelectedElement } = useDesigner();
     const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
     const topHalf = useDroppable({
         id: element.id + '-top',
@@ -121,6 +127,10 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
             onMouseLeave={() => {
                 setIsMouseOver(false);
             }}
+            onClick={(e) => {
+                e.stopPropagation();
+                setSelectedElement(element);
+            }}
         >
             <div
                 ref={topHalf.setNodeRef}
@@ -139,7 +149,8 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
                     </div>
                     <div className="absolute right-0 h-full">
                         <Button
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 removeElement(element.id);
                             }}
                             className="flex justify-center h-full border rounded-lg rounded-l-none bg-red-500"
