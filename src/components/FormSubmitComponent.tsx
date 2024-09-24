@@ -33,8 +33,10 @@ export default function FormSubmitComponent({
                 </div>
             </header>
             <div className="mt-6 border-2 border-darks2 shadow-box rounded-lg p-6 text-left">
-                <h1 className="font-semibold text-2xl">{form?.name}</h1>
-                <p className="text-muted-foreground">{form?.description}</p>
+                <h1 className="font-semibold text-xl">{form?.name}</h1>
+                <p className="text-sm text-muted-foreground">
+                    {form?.description}
+                </p>
             </div>
             <div className="flex justify-center w-full h-full items-center mt-6">
                 <div className="flex flex-col gap-4 flex-grow bg-background border-2 border-darks2 shadow-box h-full w-full rounded-lg p-6 overflow-y-auto">

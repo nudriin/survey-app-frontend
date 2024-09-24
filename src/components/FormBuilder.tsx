@@ -139,7 +139,7 @@ export default function FormBuilder({
                         <div className="flex gap-2 items-center">
                             <Button
                                 variant={'outline'}
-                                className="gap-2"
+                                className="gap-2 bg-primary text-white"
                                 asChild
                             >
                                 <Link to="/" className="items-center">

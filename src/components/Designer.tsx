@@ -12,6 +12,7 @@ import { idGenerator } from '@/lib/idGenerator';
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { BiSolidTrash } from 'react-icons/bi';
+import PropertiesSidebar from './PropertiesSidebar';
 
 export default function Designer() {
     const {
@@ -161,6 +162,7 @@ export default function Designer() {
                     )}
                 </div>
             </div>
+            {selectedElement && <PropertiesSidebar />}
         </div>
     );
 }
