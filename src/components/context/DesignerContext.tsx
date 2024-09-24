@@ -5,6 +5,7 @@ type DesignerContextType = {
     elements: FormElementInstance[];
     addElement: (index: number, element: FormElementInstance) => void;
     removeElement: (id: string) => void;
+    setElements: Dispatch<React.SetStateAction<FormElementInstance[]>>;
 
     selectedElement: FormElementInstance | null;
     setSelectedElement: Dispatch<
@@ -54,6 +55,7 @@ export default function DesignerContextProvider({
                 selectedElement,
                 setSelectedElement,
                 updateElement,
+                setElements,
             }}
         >
             {children}
