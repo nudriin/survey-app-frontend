@@ -21,7 +21,6 @@ import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import DashboardLayout from './layout/DashboardLayout';
-import { GoHome } from 'react-icons/go';
 
 export default function FormBuilder({
     form,

@@ -7,6 +7,7 @@ import { FormResponse } from '@/model/FormModel';
 import { Separator } from '@/components/ui/separator';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 export default function FormDetail() {
     return (
@@ -111,21 +112,28 @@ function FormSubmissions() {
 
     return (
         <div className="mt-4">
-            <div className="relative flex justify-between gap-2 items-center w-full border-2 border-primary p-4 rounded-lg">
-                <h1 className="text-4xl font-semibold text-left">
-                    {forms?.name}
-                </h1>
-                <Button
-                    className="absolute right-0 top-0 h-full rounded-l-none w-52 bg-purples"
-                    asChild
-                >
-                    <Link to={shareUrl}>Lihat</Link>
-                </Button>
+            <div className="flex flex-col text-left items-start gap-2 w-full border-2 border-primary p-4 rounded-lg">
+                <div className="w-full flex justify-between gap-2 items-center">
+                    <h1 className="text-4xl font-semibold text-left">
+                        {forms?.name}
+                    </h1>
+                    <Button variant="outline" asChild>
+                        <Link to={shareUrl} className="gap-1">
+                            Lihat
+                            <ChevronRightIcon className="h-4 w-4" />
+                        </Link>
+                    </Button>
+                </div>
+                <h2 className="lg:w-1/2">{forms?.description}</h2>
             </div>
             <div className="my-4 flex justify-between gap-2 items-center w-full border-2 border-primary rounded-lg">
-                <Input className="w-full border-0" readOnly value={shareUrl} />
+                <Input
+                    className="w-full border-0 text-purples"
+                    readOnly
+                    value={shareUrl}
+                />
                 <Button
-                    className="w-64 rounded-l-none bg-purples"
+                    className="w-32 rounded-l-none"
                     onClick={() => {
                         navigator.clipboard.writeText(shareUrl);
                         toast({
@@ -134,7 +142,7 @@ function FormSubmissions() {
                         });
                     }}
                 >
-                    Bagikan link
+                    Salin link
                 </Button>
             </div>
             <StatsCards forms={forms} />
