@@ -128,7 +128,7 @@ export default function FormBuilder({
     return (
         <DndContext sensors={sensors}>
             <DashboardLayout>
-                <main className="flex flex-col w-full mt-2">
+                <main className="flex flex-col w-full">
                     <nav className="flex justify-between border-b-2 p-4 gap-4 items-center">
                         <h2 className="truncate font-semibold">
                             <span className="text-muted-foreground">

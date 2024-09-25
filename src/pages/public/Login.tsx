@@ -70,7 +70,7 @@ export default function Login() {
     };
     return (
         <div className="min-h-screen flex justify-center items-center">
-            <Card className="border-2 border-darks2 shadow-box text-left w-full md:w-1/2 lg:w-1/3 h-full">
+            <Card className="border-2 border-primary shadow-box dark:shadow-light text-left w-full md:w-1/2 lg:w-1/3 h-full">
                 <CardHeader>
                     <CardTitle className="text-4xl mt-4">Login</CardTitle>
                     <CardDescription>
@@ -128,7 +128,7 @@ export default function Login() {
                             <Button
                                 onClick={form.handleSubmit(handleFormSubmit)}
                                 disabled={form.formState.isSubmitting}
-                                className="bg-purples w-full font-semibold mb-4"
+                                className="bg-purples w-full font-semibold mb-4 text-white hover:text-background"
                             >
                                 Login
                             </Button>

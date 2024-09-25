@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeProvider';
 import { Link } from 'react-router-dom';
+import Logout from '../Logout';
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     const { setTheme } = useTheme();
     return (
@@ -53,7 +54,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             </Button>
                         </li>
                         <li>
-                            <Button variant={'destructive'}>Logout</Button>
+                            <Logout />
                         </li>
                     </ul>
                 </nav>
