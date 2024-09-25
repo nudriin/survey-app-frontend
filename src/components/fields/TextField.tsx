@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils';
 const type: ElementsType = 'TextField';
 
 const extraAttr = {
-    label: 'Nama',
+    label: 'Text Input',
     helperText: 'Deskripsi, ringkasan, dan lain-lain',
     required: false,
     placeholder: 'Masukan data...',

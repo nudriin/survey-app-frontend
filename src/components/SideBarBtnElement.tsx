@@ -20,7 +20,7 @@ export default function SideBarBtnElement({
             ref={draggable.setNodeRef}
             variant={'outline'}
             className={cn(
-                'flex flex-col gap-2 h-[60px] w-[60px] cursor-grab',
+                'flex flex-col h-[100px] w-[100px] cursor-grab',
                 draggable.isDragging && 'ring-2 ring-primary'
             )}
             {...draggable.listeners}
