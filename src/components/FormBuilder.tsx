@@ -27,7 +27,7 @@ export default function FormBuilder({
 }: {
     form: FormResponse | undefined;
 }) {
-    const { setElements } = useDesigner();
+    const { setElements, setSelectedElement } = useDesigner();
     const [isReady, setIsReady] = useState<boolean>(false);
 
     const mouseSensor = useSensor(MouseSensor, {
@@ -49,9 +49,10 @@ export default function FormBuilder({
         if (isReady) return;
         const elements = JSON.parse(formcontent);
         setElements(elements);
+        setSelectedElement(null);
         const readyTimeout = setTimeout(() => setIsReady(true), 500);
         return () => clearTimeout(readyTimeout);
-    }, [formcontent, setElements, isReady]);
+    }, [formcontent, setElements, isReady, setSelectedElement]);
 
     if (!isReady) {
         return (
