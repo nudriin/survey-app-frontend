@@ -3,6 +3,13 @@ export interface FormSaveRequest {
     description?: string;
 }
 
+export interface FormDetails {
+    id: number;
+    createdAt: Date;
+    formId: number;
+    content: string;
+}
+
 export interface FormResponse {
     id: number;
     createdAt: Date;
@@ -14,4 +21,5 @@ export interface FormResponse {
     submissions: number;
     shareURL?: string;
     userId: number;
+    formDetails: FormDetails[];
 }

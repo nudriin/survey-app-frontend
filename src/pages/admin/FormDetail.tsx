@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,9 +6,22 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { FormResponse } from '@/model/FormModel';
 import { Separator } from '@/components/ui/separator';
-import { useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import {
+    ElementsType,
+    FormElementInstance,
+} from '../../components/FormElement';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { formatDistance } from 'date-fns';
 
 export default function FormDetail() {
     return (
@@ -147,17 +161,126 @@ function FormSubmissions() {
             </div>
             <StatsCards forms={forms} />
             <Separator className="my-6 bg-primary" />
-            <SubmissionTable id={forms?.id} />
+            <SubmissionTable />
         </div>
     );
 
-    function SubmissionTable({ id }: { id: number | undefined }) {
+    type Row = { [key: string]: string } & {
+        submittedAt: Date;
+    };
+    function SubmissionTable() {
+        const [forms, setForms] = useState<FormResponse>();
+        const { formId } = useParams();
+
+        const getFormById = useCallback(async () => {
+            try {
+                const response = await fetch(`/api/v1/forms/${formId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const body = await response.json();
+                if (!body.errors) {
+                    setForms(body.data);
+                } else {
+                    throw new Error(body.errors);
+                }
+            } catch (error) {
+                console.log(error);
+                toast({
+                    title: 'Error',
+                    description: `${error}`,
+                    variant: 'destructive',
+                });
+            }
+        }, [formId]);
+
+        useEffect(() => {
+            getFormById();
+        }, [getFormById]);
+
+        const formcontent = forms?.content !== undefined ? forms.content : '[]';
+        const formElements = JSON.parse(formcontent) as FormElementInstance[];
+
+        const columns: {
+            id: string;
+            label: string;
+            required: boolean;
+            type: ElementsType;
+        }[] = [];
+
+        formElements.forEach((el) => {
+            switch (el.type) {
+                case 'TextField':
+                    columns.push({
+                        id: el.id,
+                        label: el.extraAttr?.label,
+                        required: el.extraAttr?.required,
+                        type: el.type,
+                    });
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        const rows: Row[] = [];
+        forms?.formDetails.forEach((details) => {
+            const content = JSON.parse(details.content);
+            rows.push({
+                ...content,
+                submittedAt: details.createdAt,
+            });
+        });
+
         return (
             <>
                 <h1 className="text-2xl font-semibold col-span-2 text-left">
                     Jawaban
                 </h1>
+                <div className="rounded-lg border text-left">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>No.</TableHead>
+                                {columns.map((col, index) => (
+                                    <TableHead key={index}>
+                                        {col.label}
+                                    </TableHead>
+                                ))}
+                                <TableHead>Dikirm Pada</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {rows.map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    {columns.map((col) => (
+                                        <RowCell
+                                            key={col.id}
+                                            type={col.type}
+                                            value={row[col.id]}
+                                        />
+                                    ))}
+                                    <TableCell className="text-muted-foreground text-left">
+                                        {formatDistance(
+                                            row.submittedAt,
+                                            new Date(),
+                                            { addSuffix: true }
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </>
         );
+    }
+
+    function RowCell({ type, value }: { type: ElementsType; value: string }) {
+        let node: ReactNode = value;
+        return <TableCell>{node}</TableCell>;
     }
 }
