@@ -65,7 +65,7 @@ export const CheckboxFieldFormElement: FormElement = {
     ): boolean => {
         const element = formElement as CustomInstance;
         if (element.extraAttr.required) {
-            return currentValue !== 'true';
+            return currentValue === 'true';
         }
 
         return true;
@@ -271,7 +271,7 @@ function FormComponent({
                 }}
             />
             <div className="grid gap-1.5 leading-none">
-                <Label htmlFor={id} className="font-semibold">
+                <Label htmlFor={id} className="font-semibold text-left">
                     {label}
                     {required && <span className="text-red-500"> *</span>}
                 </Label>

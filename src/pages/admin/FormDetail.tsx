@@ -134,7 +134,7 @@ function FormSubmissions() {
                         {forms?.name}
                     </h1>
                     <Button variant="outline" asChild>
-                        <Link to={shareUrl} className="gap-1">
+                        <Link to={shareUrl} target="_blank" className="gap-1">
                             Lihat
                             <ChevronRightIcon className="h-4 w-4" />
                         </Link>

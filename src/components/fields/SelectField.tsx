@@ -79,6 +79,7 @@ export const SelectFieldFormElement: FormElement = {
     ): boolean => {
         const element = formElement as CustomInstance;
         if (element.extraAttr.required) {
+            console.log('Current ', currentValue);
             return currentValue.length > 0;
         }
 
@@ -371,10 +372,7 @@ function FormComponent({
                 onValueChange={(val) => {
                     setValue(val);
                     if (!submitValue) return;
-                    const valid = SelectFieldFormElement.validate(
-                        element,
-                        value
-                    );
+                    const valid = SelectFieldFormElement.validate(element, val);
                     setError(!valid);
                     submitValue(element.id, val);
                 }}
