@@ -77,12 +77,12 @@ export default function Login() {
                         Mohon masukan data anda dengan benar
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(handleFormSubmit)}
-                            className="space-y-4"
-                        >
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(handleFormSubmit)}
+                        className="space-y-4"
+                    >
+                        <CardContent>
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -123,18 +123,18 @@ export default function Login() {
                                     </FormItem>
                                 )}
                             />
-                        </form>
-                    </Form>
-                </CardContent>
-                <CardFooter>
-                    <Button
-                        onClick={form.handleSubmit(handleFormSubmit)}
-                        disabled={form.formState.isSubmitting}
-                        className="bg-purples w-full font-semibold mb-4"
-                    >
-                        Login
-                    </Button>
-                </CardFooter>
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                onClick={form.handleSubmit(handleFormSubmit)}
+                                disabled={form.formState.isSubmitting}
+                                className="bg-purples w-full font-semibold mb-4"
+                            >
+                                Login
+                            </Button>
+                        </CardFooter>
+                    </form>
+                </Form>
             </Card>
         </div>
     );
