@@ -22,6 +22,7 @@ export default function FormElementSidebar() {
                 <SideBarBtnElement formElement={FormElements.TextField} />
                 <SideBarBtnElement formElement={FormElements.NumberField} />
                 <SideBarBtnElement formElement={FormElements.TextAreaField} />
+                <SideBarBtnElement formElement={FormElements.DateField} />
             </div>
         </div>
     );
