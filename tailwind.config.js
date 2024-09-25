@@ -62,6 +62,7 @@ export default {
             },
             boxShadow: {
                 box: '8px 8px rgb(43, 34, 79)',
+                light: '8px 8px hsl(var(--primary))',
             },
             borderRadius: {
                 lg: 'var(--radius)',

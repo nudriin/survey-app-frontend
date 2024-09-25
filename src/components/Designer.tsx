@@ -136,7 +136,7 @@ export default function Designer() {
                 <div
                     ref={droppable.setNodeRef}
                     className={cn(
-                        'bg-white border-2 border-darks2 h-full min-h-screen m-auto rounded-lg flex flex-col flex-grow items-center justify-center overflow-y-auto shadow-box p-6',
+                        'bg-background border-2 border-darks2 dark:border-primary dark:shadow-light h-full min-h-screen m-auto rounded-lg flex flex-col flex-grow items-center justify-center overflow-y-auto shadow-box p-6',
                         droppable.isOver &&
                             'ring-4 ring-purples border-0 justify-start',
                         elements.length > 0 && 'justify-start'
@@ -250,7 +250,7 @@ function DesignerElementWrapper({ element }: { element: FormElementInstance }) {
             )}
             <div
                 className={cn(
-                    'flex w-full min-h-[75px] items-center rounded-lg border-2 border-darks2 p-4'
+                    'flex w-full min-h-[75px] items-center rounded-lg border-2 border-primary p-4'
                 )}
             >
                 <DesignerElement elementInstance={element} />

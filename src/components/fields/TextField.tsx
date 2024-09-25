@@ -75,7 +75,7 @@ function DesignerComponent({
                 {required && <span className="text-red-500"> *</span>}
             </Label>
             <Input
-                className="border border-darks2"
+                className="border border-primary"
                 readOnly
                 placeholder={placeholder}
             />
@@ -247,7 +247,10 @@ function FormComponent({
                 {label}
                 {required && <span className="text-red-500"> *</span>}
             </Label>
-            <Input className="border border-darks2" placeholder={placeholder} />
+            <Input
+                className="border border-primary"
+                placeholder={placeholder}
+            />
             {helperText && (
                 <p className="text-muted-foreground text-sm">{helperText}</p>
             )}

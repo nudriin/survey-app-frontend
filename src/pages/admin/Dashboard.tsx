@@ -24,11 +24,11 @@ export default function Dashboard() {
     return (
         <div>
             <StatsCards />
-            <Separator className="my-6 bg-darks2" />
+            <Separator className="my-6 bg-primary" />
             <h1 className="text-2xl font-semibold col-span-2 text-left">
                 Formulir Survei
             </h1>
-            <Separator className="my-6 bg-darks2" />
+            <Separator className="my-6 bg-primary" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <CreateFormBtn />
                 <FormsCards />
@@ -45,25 +45,25 @@ function StatsCards() {
                     title="Total Kunjungan"
                     value="0"
                     helperText="Jumlah total data kunjungan pada seluruh formulir"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
                 <StatsCard
                     title="Total Jawaban"
                     value="0"
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
                 <StatsCard
                     title="Kunjungan Bulan Ini"
                     value="0"
                     helperText="Jumlah total kunjungan pada seluruh formulir dalam bulan ini"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
                 <StatsCard
                     title="Jawaban Bulan ini"
                     value="0"
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
-                    className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
             </div>
         </DashboardLayout>
@@ -135,7 +135,7 @@ function FormsCards() {
 
 function FormsCard({ form }: { form: FormResponse }) {
     return (
-        <Card className="group border-primary/20 h-full rounded-lg hover:cursor-pointer gap-4 shadow-box border-2 border-darks2 text-left">
+        <Card className="group border-primary/20 h-full rounded-lg hover:cursor-pointer gap-4 shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary text-left">
             <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                     <span className="truncate">{form.name}</span>
@@ -163,7 +163,10 @@ function FormsCard({ form }: { form: FormResponse }) {
             </CardContent>
             <CardFooter>
                 {form.published && (
-                    <Button asChild className=" gap-2 bg-purples w-full">
+                    <Button
+                        asChild
+                        className="gap-2 text-white bg-purples w-full"
+                    >
                         <Link to={`/forms/${form.id}`}>
                             Lihat Jawaban <BiRightArrowAlt />
                         </Link>
@@ -172,7 +175,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                 {!form.published && (
                     <Button
                         asChild
-                        className="gap-2 bg-muted-foreground w-full"
+                        className="gap-2 bg-muted-foreground text-white w-full"
                     >
                         <Link to={`/build/${form.id}`}>
                             Edit Formulir <FaEdit />

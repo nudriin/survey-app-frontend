@@ -13,7 +13,7 @@ export default function FormSubmitComponent({
 }) {
     return (
         <div className="lg:max-w-[650px] p-8 mx-auto">
-            <header className="bg-gradient-to-b md:bg-gradient-to-r from-purples to-cyan-500 rounded-xl text-white p-6 shadow-box border-2 border-darks2">
+            <header className="bg-gradient-to-b md:bg-gradient-to-r from-purples to-cyan-500 rounded-xl text-white p-6 shadow-box border-2 border-darks2 dark:shadow-light dark:border-primary">
                 <div className="sm:flex items-center justify-center md:text-left gap-3 col-span-4 ">
                     <div>
                         <p></p>
@@ -32,14 +32,14 @@ export default function FormSubmitComponent({
                     />
                 </div>
             </header>
-            <div className="mt-6 border-2 border-darks2 shadow-box rounded-lg p-6 text-left">
+            <div className="mt-6 border-2 border-darks2 shadow-box rounded-lg p-6 text-left dark:shadow-light dark:border-primary">
                 <h1 className="font-semibold text-xl">{form?.name}</h1>
                 <p className="text-sm text-muted-foreground">
                     {form?.description}
                 </p>
             </div>
             <div className="flex justify-center w-full h-full items-center mt-6">
-                <div className="flex flex-col gap-4 flex-grow bg-background border-2 border-darks2 shadow-box h-full w-full rounded-lg p-6 overflow-y-auto">
+                <div className="flex flex-col gap-4 flex-grow bg-background border-2 border-darks2 shadow-box h-full w-full rounded-lg p-6 overflow-y-auto dark:shadow-light dark:border-primary">
                     {content.map((element) => {
                         const FormComponent =
                             FormElements[element.type].formComponent;

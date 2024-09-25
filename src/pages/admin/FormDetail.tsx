@@ -25,25 +25,25 @@ function StatsCards({ forms }: { forms: FormResponse | undefined }) {
                 title="Total Kunjungan"
                 value={forms?.visit.toString() ?? '0'}
                 helperText="Jumlah total data kunjungan pada formulir"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
             />
             <StatsCard
                 title="Total Jawaban"
                 value={forms?.submissions.toString() ?? '0'}
                 helperText="Jumlah total jawaban yang diterima pada formulir"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
             />
             <StatsCard
                 title="Kunjungan Bulan Ini"
                 value="0"
                 helperText="Jumlah total kunjungan pada formulir dalam bulan ini"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
             />
             <StatsCard
                 title="Jawaban Bulan ini"
                 value="0"
                 helperText="Jumlah total jawaban yang diterima pada formulir dalam bulan ini"
-                className="shadow-box border-2 border-darks2 rounded-lg text-left"
+                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
             />
         </div>
     );
@@ -111,7 +111,7 @@ function FormSubmissions() {
 
     return (
         <div className="mt-4">
-            <div className="relative flex justify-between gap-2 items-center w-full border-2 border-darks2 p-4 rounded-lg shadow-box">
+            <div className="relative flex justify-between gap-2 items-center w-full border-2 border-primary p-4 rounded-lg">
                 <h1 className="text-4xl font-semibold text-left">
                     {forms?.name}
                 </h1>
@@ -122,7 +122,7 @@ function FormSubmissions() {
                     <Link to={shareUrl}>Lihat</Link>
                 </Button>
             </div>
-            <div className="my-4 flex justify-between gap-2 items-center w-full border-2 border-darks2 rounded-lg shadow-box">
+            <div className="my-4 flex justify-between gap-2 items-center w-full border-2 border-primary rounded-lg">
                 <Input className="w-full border-0" readOnly value={shareUrl} />
                 <Button
                     className="w-64 rounded-l-none bg-purples"
@@ -138,7 +138,7 @@ function FormSubmissions() {
                 </Button>
             </div>
             <StatsCards forms={forms} />
-            <Separator className="my-6 bg-darks2" />
+            <Separator className="my-6 bg-primary" />
             <SubmissionTable id={forms?.id} />
         </div>
     );

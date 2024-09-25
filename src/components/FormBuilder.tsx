@@ -128,7 +128,7 @@ export default function FormBuilder({
     return (
         <DndContext sensors={sensors}>
             <DashboardLayout>
-                <main className="flex flex-col w-full">
+                <main className="flex flex-col w-full mt-2">
                     <nav className="flex justify-between border-b-2 p-4 gap-4 items-center">
                         <h2 className="truncate font-semibold">
                             <span className="text-muted-foreground">
@@ -137,15 +137,6 @@ export default function FormBuilder({
                             {form?.name}
                         </h2>
                         <div className="flex gap-2 items-center">
-                            <Button
-                                variant={'outline'}
-                                className="gap-2 bg-primary text-white"
-                                asChild
-                            >
-                                <Link to="/" className="items-center">
-                                    Dashboard <GoHome />
-                                </Link>
-                            </Button>
                             <PreviewDialogBtn />
                             {!form?.published && (
                                 <>
