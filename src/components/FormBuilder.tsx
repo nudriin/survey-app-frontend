@@ -57,7 +57,7 @@ export default function FormBuilder({
     if (!isReady) {
         return (
             <div className="flex flex-col items-center justify-center w-full h-full">
-                <ImSpinner2 className="animate-spin h-12 w-12" />
+                <ImSpinner2 className="w-12 h-12 animate-spin" />
             </div>
         );
     }
@@ -73,24 +73,24 @@ export default function FormBuilder({
                     recycle={false}
                     numberOfPieces={1000}
                 />
-                <div className="flex flex-col items-center justify-center min-h-screen w-full">
-                    <div className="max-w-md border-2 border-darks2 shadow-box p-6 rounded-lg text-left">
-                        <h1 className="text-4xl font-semibold text-purples border-b pb-2 mb-10">
+                <div className="flex flex-col items-center justify-center w-full min-h-screen">
+                    <div className="max-w-md p-6 text-left border-2 rounded-lg border-darks2 shadow-box">
+                        <h1 className="pb-2 mb-10 text-4xl font-semibold border-b text-purples">
                             Formulir telah di publikasikan!
                         </h1>
                         <h2 className="text-2xl">Bagikan formulir ini</h2>
-                        <h3 className="text-sm text-muted-foreground border-b pb-10">
+                        <h3 className="pb-10 text-sm border-b text-muted-foreground">
                             Siapapun yang memiliki link, dapat melihat dan
                             mengisi formulir
                         </h3>
-                        <div className="my-4 flex flex-col gap-2 items-center w-full border-b pb-4">
+                        <div className="flex flex-col items-center w-full gap-2 pb-4 my-4 border-b">
                             <Input
                                 className="w-full"
                                 readOnly
                                 value={shareUrl}
                             />
                             <Button
-                                className="mt-2 w-full bg-purples"
+                                className="w-full mt-2 bg-purples"
                                 onClick={() => {
                                     navigator.clipboard.writeText(shareUrl);
                                     toast({
@@ -129,14 +129,14 @@ export default function FormBuilder({
         <DndContext sensors={sensors}>
             <DashboardLayout>
                 <main className="flex flex-col w-full">
-                    <nav className="flex justify-between border-b-2 p-4 gap-4 items-center">
-                        <h2 className="truncate font-semibold">
+                    <nav className="flex items-center justify-between gap-4 p-4 border-b-2">
+                        <h2 className="font-semibold truncate">
                             <span className="text-muted-foreground">
                                 Formulir:{' '}
                             </span>
                             {form?.name}
                         </h2>
-                        <div className="flex gap-2 items-center">
+                        <div className="flex items-center gap-2">
                             <PreviewDialogBtn />
                             {!form?.published && (
                                 <>
