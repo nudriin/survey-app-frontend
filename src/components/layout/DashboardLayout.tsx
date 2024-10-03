@@ -1,23 +1,39 @@
-import { ReactNode } from 'react';
-import tutWuriImg from '../../assets/images/web/tut_wuri.png';
+import { ReactNode, useEffect, useState } from "react"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '../context/ThemeProvider';
-import { Link } from 'react-router-dom';
-import Logout from '../Logout';
+} from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "../context/ThemeProvider"
+import { Link } from "react-router-dom"
+import Logout from "../Logout"
+import pky from "../../assets/images/web/pky.png"
+import moment from "moment/min/moment-with-locales"
+import "moment/locale/id"
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-    const { setTheme } = useTheme();
+    const { setTheme } = useTheme()
+    const [date, setDate] = useState<string>()
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const dateNow = new Date()
+            moment.locale("id")
+            const localDate = moment(dateNow).format("LLLL")
+            setDate(localDate)
+        }, 3000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    })
+
     return (
         <section>
             <header>
-                <nav className="mb-2 rounded-lg p-2 ">
-                    <ul className="flex justify-end gap-2 items-center">
+                <nav className="p-2 mb-2 rounded-lg ">
+                    <ul className="flex items-center justify-end gap-2">
                         <li>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -31,17 +47,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem
-                                        onClick={() => setTheme('light')}
+                                        onClick={() => setTheme("light")}
                                     >
                                         Light
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                        onClick={() => setTheme('dark')}
+                                        onClick={() => setTheme("dark")}
                                     >
                                         Dark
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
-                                        onClick={() => setTheme('system')}
+                                        onClick={() => setTheme("system")}
                                     >
                                         System
                                     </DropdownMenuItem>
@@ -49,7 +65,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             </DropdownMenu>
                         </li>
                         <li>
-                            <Button variant={'outline'} asChild>
+                            <Button variant={"outline"} asChild>
                                 <Link to="/">Dashboard</Link>
                             </Button>
                         </li>
@@ -58,10 +74,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         </li>
                     </ul>
                 </nav>
-                <div className="sm:flex items-center justify-center md:text-left gap-3 col-span-4 bg-purples rounded-xl text-white p-6 shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary">
-                    <div>
-                        <p></p>
-                        <h1 className="text-2xl md:text-4xl font-bold my-3">
+                <div className="items-center justify-center col-span-4 gap-6 p-6 text-white border-2 sm:flex md:text-left bg-purples rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary">
+                    <div className="order-1 md:order-2">
+                        <p>{date}</p>
+                        <h1 className="my-3 text-2xl font-bold md:text-4xl">
                             Selamat Datang di Dinas Pendidikan Kota Palangka
                             Raya
                         </h1>
@@ -69,14 +85,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             Semoga harimu menyenangkan!
                         </p>
                     </div>
-                    <img
-                        className="h-28 md:h-36 lg:h-48 order-2 md:order-1 mx-auto"
-                        src={tutWuriImg}
-                        alt=""
-                    />
+                    <Link
+                        to="/"
+                        className="order-2 mx-auto h-28 md:h-36 lg:h-48 md:order-1"
+                    >
+                        <img className="h-48" src={pky} alt="" />
+                    </Link>
                 </div>
             </header>
             <main>{children}</main>
         </section>
-    );
+    )
 }

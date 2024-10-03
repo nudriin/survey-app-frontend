@@ -1,7 +1,7 @@
 import { FormElementInstance, FormElements } from "./FormElement"
 import { Button } from "./ui/button"
 import { HiCursorClick } from "react-icons/hi"
-import tutWuriImg from "../assets/images/web/tut_wuri.png"
+import pky from "../assets/images/web/pky.png"
 import { FormResponse } from "@/model/FormModel"
 import { useRef, useState } from "react"
 import { toast } from "@/hooks/use-toast"
@@ -121,7 +121,7 @@ export default function FormSubmitComponent({
                     </div>
                     <img
                         className="order-2 mx-auto h-28 md:h-36 lg:h-28 md:order-1"
-                        src={tutWuriImg}
+                        src={pky}
                         alt=""
                     />
                 </div>
