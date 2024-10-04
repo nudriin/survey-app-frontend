@@ -1,7 +1,7 @@
-import CreateFormBtn from '@/components/CreateFormBtn';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import CreateFormBtn from "@/components/CreateFormBtn"
+import DashboardLayout from "@/components/layout/DashboardLayout"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -9,16 +9,16 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { FormResponse } from '@/model/FormModel';
-import { formatDistance } from 'date-fns';
-import { useCallback, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { BsEyeFill } from 'react-icons/bs';
-import { FaEdit, FaWpforms } from 'react-icons/fa';
-import { BiRightArrowAlt } from 'react-icons/bi';
-import { Link } from 'react-router-dom';
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { FormResponse, FormTotalStatistics } from "@/model/FormModel"
+import { formatDistance } from "date-fns"
+import { useCallback, useEffect, useState } from "react"
+import { useCookies } from "react-cookie"
+import { BsEyeFill } from "react-icons/bs"
+import { FaEdit, FaWpforms } from "react-icons/fa"
+import { BiRightArrowAlt } from "react-icons/bi"
+import { Link } from "react-router-dom"
 
 export default function Dashboard() {
     return (
@@ -34,40 +34,62 @@ export default function Dashboard() {
                 <FormsCards />
             </div>
         </div>
-    );
+    )
 }
 
 function StatsCards() {
+    const [statistics, setStatistics] = useState<FormTotalStatistics>()
+    const [cookie] = useCookies(["auth"])
+    const token = cookie.auth
+
+    const getAllStatistics = useCallback(async () => {
+        try {
+            const response = await fetch("/api/v1/forms/all/statistics", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            const body = await response.json()
+            if (!body.errors) {
+                setStatistics(body.data)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [token])
+
+    useEffect(() => {
+        getAllStatistics()
+    }, [getAllStatistics])
+
     return (
         <DashboardLayout>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
+            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
                 <StatsCard
                     title="Total Kunjungan"
-                    value="0"
+                    value={statistics?.totalVisit}
                     helperText="Jumlah total data kunjungan pada seluruh formulir"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                    className="shadow-box dark:shadow-light border-2 border-darks2 md:col-span-2 lg:col-span-1 dark:border-primary rounded-lg text-left"
                 />
                 <StatsCard
                     title="Total Jawaban"
-                    value="0"
+                    value={statistics?.totalSubmission}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
                     className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
                 <StatsCard
-                    title="Kunjungan Bulan Ini"
-                    value="0"
-                    helperText="Jumlah total kunjungan pada seluruh formulir dalam bulan ini"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
-                />
-                <StatsCard
                     title="Jawaban Bulan ini"
-                    value="0"
+                    value={statistics?.totalSubmissionThisMonth}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
                     className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
             </div>
         </DashboardLayout>
-    );
+    )
 }
 
 function StatsCard({
@@ -76,10 +98,10 @@ function StatsCard({
     helperText,
     className,
 }: {
-    title: string;
-    value: string;
-    helperText: string;
-    className: string;
+    title: string
+    value: number | undefined
+    helperText: string
+    className: string
 }) {
     return (
         <Card className={className}>
@@ -93,44 +115,44 @@ function StatsCard({
                 <p className="text-sm text-muted-foreground">{helperText}</p>
             </CardContent>
         </Card>
-    );
+    )
 }
 
 function FormsCards() {
-    const [forms, setForms] = useState<FormResponse[]>([]);
-    const [cookie] = useCookies(['auth']);
-    const token = cookie.auth;
+    const [forms, setForms] = useState<FormResponse[]>([])
+    const [cookie] = useCookies(["auth"])
+    const token = cookie.auth
 
     const getAllForms = useCallback(async () => {
         try {
-            const response = await fetch('/api/v1/forms', {
-                method: 'GET',
+            const response = await fetch("/api/v1/forms", {
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-            });
-            const body = await response.json();
+            })
+            const body = await response.json()
             if (!body.errors) {
-                setForms(body.data);
+                setForms(body.data)
             } else {
-                throw new Error(body.errors);
+                throw new Error(body.errors)
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    }, [token]);
+    }, [token])
 
     useEffect(() => {
-        getAllForms();
-    }, [getAllForms]);
+        getAllForms()
+    }, [getAllForms])
     return (
         <>
             {forms.map((value, index) => (
                 <FormsCard key={index} form={value} />
             ))}
         </>
-    );
+    )
 }
 
 function FormsCard({ form }: { form: FormResponse }) {
@@ -159,7 +181,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                 </CardDescription>
             </CardHeader>
             <CardContent className="truncate">
-                {form.description || 'Tidak ada deskripsi'}
+                {form.description || "Tidak ada deskripsi"}
             </CardContent>
             <CardFooter>
                 {form.published && (
@@ -184,5 +206,5 @@ function FormsCard({ form }: { form: FormResponse }) {
                 )}
             </CardFooter>
         </Card>
-    );
+    )
 }

@@ -13,7 +13,7 @@ export default {
                 poppins: 'Poppins, sans-serif',
             },
             colors: {
-                purples: '#1E7DBF',
+                purples: '#5831ee',
                 oranges: '#F86767',
                 greens: '#12BC95',
                 teals: '#47C9D7',
@@ -61,8 +61,9 @@ export default {
                 },
             },
             boxShadow: {
-                box: '8px 8px rgb(43, 34, 79)',
-                light: '8px 8px hsl(var(--primary))',
+                box: '4px 4px rgb(43, 34, 79)',
+                // light: '4px 4px hsl(var(--primary))',
+                light: '4px 4px rgb(240, 240, 240)',
             },
             borderRadius: {
                 lg: 'var(--radius)',
