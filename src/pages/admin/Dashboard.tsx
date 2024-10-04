@@ -19,6 +19,8 @@ import { BsEyeFill } from "react-icons/bs"
 import { FaEdit, FaWpforms } from "react-icons/fa"
 import { BiRightArrowAlt } from "react-icons/bi"
 import { Link } from "react-router-dom"
+import DistributionCharts from "@/components/DistributionCharts"
+import MonthlySubmissionCharts from "@/components/MonthlySubmissionCharts"
 
 export default function Dashboard() {
     return (
@@ -87,6 +89,10 @@ function StatsCards() {
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
                     className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
                 />
+            </div>
+            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                <DistributionCharts />
+                <MonthlySubmissionCharts />
             </div>
         </DashboardLayout>
     )

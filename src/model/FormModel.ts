@@ -29,3 +29,13 @@ export interface FormTotalStatistics {
     totalSubmission: number
     totalSubmissionThisMonth: number
 }
+
+export interface SubmissionDistributionByForm {
+    form: string
+    count: number
+}
+
+export interface MonthlySubmissionCount {
+    date: Date
+    count: number
+}
