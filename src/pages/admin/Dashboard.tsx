@@ -27,11 +27,11 @@ export default function Dashboard() {
         <div>
             <StatsCards />
             <Separator className="my-6 bg-primary" />
-            <h1 className="text-2xl font-semibold col-span-2 text-left">
+            <h1 className="col-span-2 text-2xl font-semibold text-left">
                 Formulir Survei
             </h1>
             <Separator className="my-6 bg-primary" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <CreateFormBtn />
                 <FormsCards />
             </div>
@@ -70,27 +70,27 @@ function StatsCards() {
 
     return (
         <DashboardLayout>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+            <div className="grid w-full grid-cols-1 gap-4 pt-8 md:grid-cols-2 lg:grid-cols-3 ">
                 <StatsCard
                     title="Total Kunjungan"
                     value={statistics?.totalVisit}
                     helperText="Jumlah total data kunjungan pada seluruh formulir"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 md:col-span-2 lg:col-span-1 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 md:col-span-2 lg:col-span-1 dark:border-primary"
                 />
                 <StatsCard
                     title="Total Jawaban"
                     value={statistics?.totalSubmission}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
                 <StatsCard
                     title="Jawaban Bulan ini"
                     value={statistics?.totalSubmissionThisMonth}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
             </div>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <div className="grid w-full grid-cols-1 gap-4 pt-8 md:grid-cols-2 ">
                 <DistributionCharts />
                 <MonthlySubmissionCharts />
             </div>
@@ -111,11 +111,11 @@ function StatsCard({
 }) {
     return (
         <Card className={className}>
-            <CardHeader className="space-y-0 pb-2">
+            <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="">{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <h1 className="text-4xl font-bold my-2 text-purples">
+                <h1 className="my-2 text-4xl font-bold text-purples">
                     {value}
                 </h1>
                 <p className="text-sm text-muted-foreground">{helperText}</p>
@@ -163,7 +163,7 @@ function FormsCards() {
 
 function FormsCard({ form }: { form: FormResponse }) {
     return (
-        <Card className="group border-primary/20 h-full rounded-lg hover:cursor-pointer gap-4 shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary text-left">
+        <Card className="h-full gap-4 text-left border-2 rounded-lg group border-primary/20 hover:cursor-pointer shadow-box dark:shadow-light border-darks2 dark:border-primary">
             <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                     <span className="truncate">{form.name}</span>
@@ -172,7 +172,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                         <Badge variant="destructive">Draft</Badge>
                     )}
                 </CardTitle>
-                <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
+                <CardDescription className="flex items-center justify-between text-sm text-muted-foreground">
                     {formatDistance(form.createdAt, new Date(), {
                         addSuffix: true,
                     })}
@@ -193,7 +193,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                 {form.published && (
                     <Button
                         asChild
-                        className="gap-2 text-white bg-purples w-full"
+                        className="w-full gap-2 text-white bg-purples"
                     >
                         <Link to={`/forms/${form.id}`}>
                             Lihat Jawaban <BiRightArrowAlt />
@@ -203,7 +203,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                 {!form.published && (
                     <Button
                         asChild
-                        className="gap-2 bg-muted-foreground text-white w-full"
+                        className="w-full gap-2 text-white bg-muted-foreground"
                     >
                         <Link to={`/build/${form.id}`}>
                             Edit Formulir <FaEdit />
