@@ -17,10 +17,21 @@ import { useCallback, useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { BsEyeFill } from "react-icons/bs"
 import { FaEdit, FaWpforms } from "react-icons/fa"
-import { BiRightArrowAlt } from "react-icons/bi"
-import { Link } from "react-router-dom"
+import { BiRightArrowAlt, BiSolidTrash } from "react-icons/bi"
+import { Link, useNavigate } from "react-router-dom"
 import DistributionCharts from "@/components/DistributionCharts"
 import MonthlySubmissionCharts from "@/components/MonthlySubmissionCharts"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function Dashboard() {
     return (
@@ -162,6 +173,7 @@ function FormsCards() {
 }
 
 function FormsCard({ form }: { form: FormResponse }) {
+    const navigate = useNavigate()
     return (
         <Card className="h-full gap-4 text-left border-2 rounded-lg group border-primary/20 hover:cursor-pointer shadow-box dark:shadow-light border-darks2 dark:border-primary">
             <CardHeader>
@@ -189,28 +201,92 @@ function FormsCard({ form }: { form: FormResponse }) {
             <CardContent className="truncate">
                 {form.description || "Tidak ada deskripsi"}
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex gap-2">
                 {form.published && (
                     <Button
                         asChild
                         className="w-full gap-2 text-white bg-purples"
                     >
                         <Link to={`/forms/${form.id}`}>
-                            Lihat Jawaban <BiRightArrowAlt />
+                            Lihat <BiRightArrowAlt />
                         </Link>
                     </Button>
                 )}
-                {!form.published && (
+                {form.published ? (
+                    <DialogButton
+                        isDelete={false}
+                        dialogTitle="Peringatan !!!"
+                        dialogDescription="Dengan mengedit formulir ini, kamu mungkin akan kehilangan beberapa data jawaban yang sebelumnya telah tersimpan di formulir"
+                        id={form.id}
+                        dialogActionText="Edit"
+                        className="w-full gap-2 text-secondary bg-primary"
+                        dialogActionClass="text-secondary bg-primary"
+                    />
+                ) : (
                     <Button
-                        asChild
-                        className="w-full gap-2 text-white bg-muted-foreground"
+                        className="w-full gap-2 text-secondary bg-primary"
+                        onClick={() => navigate(`/build/${form.id}`)}
                     >
-                        <Link to={`/build/${form.id}`}>
-                            Edit Formulir <FaEdit />
-                        </Link>
+                        Edit
+                        <FaEdit />
                     </Button>
                 )}
+                <DialogButton
+                    isDelete={true}
+                    dialogTitle="Peringatan !!!"
+                    dialogDescription="Dengan menghapus formulir ini, kamu akan kehilangan seluruh data jawaban yang tersimpan di formulir"
+                    id={form.id}
+                    dialogActionText="Hapus"
+                    className="w-full gap-2 text-white bg-destructive"
+                    dialogActionClass="text-white bg-destructive"
+                />
             </CardFooter>
         </Card>
+    )
+}
+
+function DialogButton({
+    isDelete,
+    dialogTitle,
+    dialogDescription,
+    dialogActionText,
+    dialogActionClass,
+    id,
+    className,
+}: {
+    isDelete: boolean
+    dialogTitle: string
+    dialogDescription: string
+    dialogActionText: string
+    dialogActionClass: string
+    id: number
+    className: string
+}) {
+    const navigate = useNavigate()
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className={className} size={"icon"}>
+                    {isDelete ? <BiSolidTrash /> : <FaEdit />}
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        <span>{dialogDescription}</span>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                    <AlertDialogAction
+                        className={dialogActionClass}
+                        onClick={() => navigate(`/build/${id}`)}
+                    >
+                        {dialogActionText}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }

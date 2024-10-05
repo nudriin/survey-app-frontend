@@ -14,12 +14,6 @@ import DragOverlayWrapper from "./DragOverlayWrapper"
 import useDesigner from "@/hooks/useDesigner"
 import { useEffect, useState } from "react"
 import { ImSpinner2 } from "react-icons/im"
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
-import { toast } from "@/hooks/use-toast"
-import { Link } from "react-router-dom"
-import Confetti from "react-confetti"
 import DashboardLayout from "./layout/DashboardLayout"
 
 export default function FormBuilder({
@@ -62,69 +56,6 @@ export default function FormBuilder({
         )
     }
 
-    const shareUrl = `${window.location.origin}/form/${form?.shareURL}`
-
-    if (form?.published) {
-        return (
-            <>
-                <Confetti
-                    width={window.innerWidth}
-                    height={window.innerHeight}
-                    recycle={false}
-                    numberOfPieces={1000}
-                />
-                <div className="flex flex-col items-center justify-center w-full min-h-screen">
-                    <div className="max-w-md p-6 text-left border-2 rounded-lg border-darks2 shadow-box">
-                        <h1 className="pb-2 mb-10 text-4xl font-semibold border-b text-purples">
-                            Formulir telah di publikasikan!
-                        </h1>
-                        <h2 className="text-2xl">Bagikan formulir ini</h2>
-                        <h3 className="pb-10 text-sm border-b text-muted-foreground">
-                            Siapapun yang memiliki link, dapat melihat dan
-                            mengisi formulir
-                        </h3>
-                        <div className="flex flex-col items-center w-full gap-2 pb-4 my-4 border-b">
-                            <Input
-                                className="w-full"
-                                readOnly
-                                value={shareUrl}
-                            />
-                            <Button
-                                className="w-full mt-2 bg-purples"
-                                onClick={() => {
-                                    navigator.clipboard.writeText(shareUrl)
-                                    toast({
-                                        title: "Success",
-                                        description: "Link berhasil disalin",
-                                    })
-                                }}
-                            >
-                                Salin link
-                            </Button>
-                        </div>
-                        <div className="flex justify-between">
-                            <Button variant={"link"} asChild>
-                                <Link to="/" className="gap-2">
-                                    <BsArrowLeft />
-                                    Kembali ke dashboard
-                                </Link>
-                            </Button>
-                            <Button variant={"link"} asChild>
-                                <Link
-                                    to={`/forms/${form.id}`}
-                                    className="gap-2"
-                                >
-                                    Detail formulir
-                                    <BsArrowRight />
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
-
     return (
         <DndContext sensors={sensors}>
             <DashboardLayout>
@@ -138,12 +69,8 @@ export default function FormBuilder({
                         </h2>
                         <div className="flex items-center gap-2">
                             <PreviewDialogBtn />
-                            {!form?.published && (
-                                <>
-                                    <SaveFormBtn id={form?.id} />
-                                    <PublishFormBtn id={form?.id} />
-                                </>
-                            )}
+                            <SaveFormBtn id={form?.id} />
+                            <PublishFormBtn id={form?.id} />
                         </div>
                     </nav>
                     <div className="flex w-full flex-grow items-center justify-center relative overflow-auto min-h-screen bg-accent bg-[url(/paper.svg)]">
