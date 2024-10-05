@@ -32,6 +32,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { toast } from "@/hooks/use-toast"
 
 export default function Dashboard() {
     return (
@@ -263,6 +264,38 @@ function DialogButton({
     className: string
 }) {
     const navigate = useNavigate()
+    const [cookie] = useCookies(["auth"])
+    const token = cookie.auth
+
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`/api/v1/forms/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            const body = await response.json()
+            if (!body.errors) {
+                toast({
+                    title: "Sukses",
+                    description: "Form berhasil dihapus",
+                })
+                navigate(0)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "Error",
+                description: "Ada sesuatu yang salah, silahkan coba lagi",
+                variant: "destructive",
+            })
+        }
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -281,7 +314,9 @@ function DialogButton({
                     <AlertDialogCancel>Batal</AlertDialogCancel>
                     <AlertDialogAction
                         className={dialogActionClass}
-                        onClick={() => navigate(`/build/${id}`)}
+                        onClick={() =>
+                            isDelete ? handleDelete() : navigate(`/build/${id}`)
+                        }
                     >
                         {dialogActionText}
                     </AlertDialogAction>
