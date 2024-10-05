@@ -3,7 +3,7 @@ import { Button } from "./ui/button"
 import { HiCursorClick } from "react-icons/hi"
 import pky from "../assets/images/web/pky.png"
 import { FormResponse } from "@/model/FormModel"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "@/hooks/use-toast"
 import { Link, useNavigate } from "react-router-dom"
 import { useTheme } from "next-themes"
@@ -35,6 +35,14 @@ export default function FormResponseEditComponent({
     const { setTheme } = useTheme()
     const navigate = useNavigate()
 
+    useEffect(() => {
+        content.forEach((element) => {
+            if (detailContents[element.id] && !formValues.current[element.id]) {
+                formValues.current[element.id] = detailContents[element.id]
+            }
+        })
+    }, [content, detailContents])
+
     const validateForm = (): boolean => {
         for (const field of content) {
             const actualValue = formValues.current[field.id] || ""
@@ -56,6 +64,11 @@ export default function FormResponseEditComponent({
     }
 
     const handleSubmit = async () => {
+        content.forEach((element) => {
+            if (detailContents[element.id] && !formValues.current[element.id]) {
+                formValues.current[element.id] = detailContents[element.id]
+            }
+        })
         formErrors.current = {}
         console.log(formValues.current)
         const validForm = validateForm()

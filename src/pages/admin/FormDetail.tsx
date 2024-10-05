@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
 import { FormResponse } from "@/model/FormModel"
 import { Separator } from "@/components/ui/separator"
-import { ReactNode, useCallback, useEffect, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { ChevronRightIcon } from "@radix-ui/react-icons"
 import { ElementsType, FormElementInstance } from "../../components/FormElement"
@@ -21,6 +21,7 @@ import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FaEdit } from "react-icons/fa"
+import * as XLSX from "xlsx"
 
 export default function FormDetail() {
     return (
@@ -158,6 +159,7 @@ function FormSubmissions() {
     function SubmissionTable() {
         const [forms, setForms] = useState<FormResponse>()
         const { formId } = useParams()
+        const tableRef = useRef<HTMLTableElement>(null)
 
         const getFormById = useCallback(async () => {
             try {
@@ -226,13 +228,26 @@ function FormSubmissions() {
             })
         })
 
+        const exportToExcel = () => {
+            if (!tableRef.current) return
+            const dates = new Date().toLocaleDateString()
+            const table = tableRef.current
+            const wb = XLSX.utils.table_to_book(table)
+            XLSX.writeFile(wb, `Laporan ${forms?.name} ${dates} .xlsx`)
+        }
+
         return (
             <>
-                <h1 className="col-span-2 text-2xl font-semibold text-left">
-                    Jawaban
-                </h1>
+                <div className="flex items-center justify-between col-span-2 mb-2">
+                    <h1 className="text-2xl font-semibold text-left">
+                        Jawaban
+                    </h1>
+                    <Button className="bg-primary" onClick={exportToExcel}>
+                        Export (xlsx)
+                    </Button>
+                </div>
                 <div className="text-left border rounded-lg">
-                    <Table>
+                    <Table ref={tableRef}>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>No.</TableHead>
