@@ -20,6 +20,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { IoTrendingUp } from "react-icons/io5"
 import { MonthlySubmissionCount } from "@/model/FormModel"
 import { useCookies } from "react-cookie"
+import { TbMoodEmpty } from "react-icons/tb"
 
 export default function MonthlySubmissionCharts() {
     const [data, setData] = useState<MonthlySubmissionCount[]>([])
@@ -62,6 +63,29 @@ export default function MonthlySubmissionCharts() {
         getAllDailyStats()
     }, [getAllDailyStats])
 
+    if (!loading && data.length === 0) {
+        return (
+            <Card className="border-2 shadow-box dark:shadow-light border-primary">
+                <CardHeader>
+                    <CardTitle>Grafik Jawaban per Bulan</CardTitle>
+                    <CardDescription>{today}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-center flex-1 gap-2 text-purples">
+                    <h1 className="text-xl font-semibold">
+                        Data tidak tersedia
+                    </h1>
+                    <TbMoodEmpty size={30} />
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-2 text-sm">
+                    <div className="flex gap-2 font-medium leading-none">
+                        Trending jawaban per bulan{" "}
+                        <IoTrendingUp className="w-4 h-4" />
+                    </div>
+                </CardFooter>
+            </Card>
+        )
+    }
+
     let chartData
     if (!loading) {
         chartData = data?.map((val) => {
@@ -80,7 +104,7 @@ export default function MonthlySubmissionCharts() {
     } satisfies ChartConfig
 
     return (
-        <Card className="shadow-box dark:shadow-light border-2 border-primary">
+        <Card className="border-2 shadow-box dark:shadow-light border-primary">
             <CardHeader>
                 <CardTitle>Grafik Jawaban per Bulan</CardTitle>
                 <CardDescription>{today}</CardDescription>
