@@ -1,18 +1,15 @@
 /* eslint-disable prefer-const */
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/hooks/use-toast';
-import { FormResponse } from '@/model/FormModel';
-import { Separator } from '@/components/ui/separator';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
-import {
-    ElementsType,
-    FormElementInstance,
-} from '../../components/FormElement';
+import DashboardLayout from "@/components/layout/DashboardLayout"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { toast } from "@/hooks/use-toast"
+import { FormResponse } from "@/model/FormModel"
+import { Separator } from "@/components/ui/separator"
+import { ReactNode, useCallback, useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import { ChevronRightIcon } from "@radix-ui/react-icons"
+import { ElementsType, FormElementInstance } from "../../components/FormElement"
 import {
     Table,
     TableBody,
@@ -20,10 +17,11 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table';
-import { format, formatDistance } from 'date-fns';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+} from "@/components/ui/table"
+import { format } from "date-fns"
+import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
+import { FaEdit } from "react-icons/fa"
 
 export default function FormDetail() {
     return (
@@ -32,38 +30,26 @@ export default function FormDetail() {
                 <FormSubmissions />
             </DashboardLayout>
         </div>
-    );
+    )
 }
 
 function StatsCards({ forms }: { forms: FormResponse | undefined }) {
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 ">
             <StatsCard
                 title="Total Kunjungan"
-                value={forms?.visit.toString() ?? '0'}
+                value={forms?.visit.toString() ?? "0"}
                 helperText="Jumlah total data kunjungan pada formulir"
-                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
             />
             <StatsCard
                 title="Total Jawaban"
-                value={forms?.submissions.toString() ?? '0'}
+                value={forms?.submissions.toString() ?? "0"}
                 helperText="Jumlah total jawaban yang diterima pada formulir"
-                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
-            />
-            <StatsCard
-                title="Kunjungan Bulan Ini"
-                value="0"
-                helperText="Jumlah total kunjungan pada formulir dalam bulan ini"
-                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
-            />
-            <StatsCard
-                title="Jawaban Bulan ini"
-                value="0"
-                helperText="Jumlah total jawaban yang diterima pada formulir dalam bulan ini"
-                className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
             />
         </div>
-    );
+    )
 }
 
 function StatsCard({
@@ -72,77 +58,77 @@ function StatsCard({
     helperText,
     className,
 }: {
-    title: string;
-    value: string;
-    helperText: string;
-    className: string;
+    title: string
+    value: string
+    helperText: string
+    className: string
 }) {
     return (
         <Card className={className}>
-            <CardHeader className="space-y-0 pb-2">
+            <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="">{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <h1 className="text-4xl font-bold my-2 text-purples">
+                <h1 className="my-2 text-4xl font-bold text-purples">
                     {value}
                 </h1>
                 <p className="text-sm text-muted-foreground">{helperText}</p>
             </CardContent>
         </Card>
-    );
+    )
 }
 
 function FormSubmissions() {
-    const [forms, setForms] = useState<FormResponse>();
-    const { formId } = useParams();
+    const [forms, setForms] = useState<FormResponse>()
+    const { formId } = useParams()
 
     const getFormById = useCallback(async () => {
         try {
             const response = await fetch(`/api/v1/forms/${formId}`, {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
-            });
-            const body = await response.json();
+            })
+            const body = await response.json()
             if (!body.errors) {
-                setForms(body.data);
+                setForms(body.data)
             } else {
-                throw new Error(body.errors);
+                throw new Error(body.errors)
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
             toast({
-                title: 'Error',
+                title: "Error",
                 description: `${error}`,
-                variant: 'destructive',
-            });
+                variant: "destructive",
+            })
         }
-    }, [formId]);
+    }, [formId])
 
     useEffect(() => {
-        getFormById();
-    }, [getFormById]);
+        getFormById()
+    }, [getFormById])
 
-    const shareUrl = `${window.location.origin}/form/${forms?.shareURL}`;
+    const shareUrl = `${window.location.origin}/form/${forms?.shareURL}`
 
     return (
         <div className="mt-4">
-            <div className="flex flex-col text-left items-start gap-2 w-full border-2 border-primary p-4 rounded-lg">
-                <div className="w-full flex justify-between gap-2 items-center">
+            <div className="flex flex-col items-start w-full gap-2 p-4 text-left border-2 rounded-lg border-primary">
+                <div className="flex items-center justify-between w-full gap-2">
                     <h1 className="text-4xl font-semibold text-left">
                         {forms?.name}
                     </h1>
                     <Button variant="outline" asChild>
                         <Link to={shareUrl} target="_blank" className="gap-1">
                             Lihat
-                            <ChevronRightIcon className="h-4 w-4" />
+                            <ChevronRightIcon className="w-4 h-4" />
                         </Link>
                     </Button>
                 </div>
                 <h2 className="lg:w-1/2">{forms?.description}</h2>
             </div>
-            <div className="my-4 flex justify-between gap-2 items-center w-full border-2 border-primary rounded-lg">
+            <div className="flex items-center justify-between w-full gap-2 my-4 border-2 rounded-lg border-primary">
                 <Input
                     className="w-full border-0 text-purples"
                     readOnly
@@ -151,11 +137,11 @@ function FormSubmissions() {
                 <Button
                     className="w-32 rounded-l-none"
                     onClick={() => {
-                        navigator.clipboard.writeText(shareUrl);
+                        navigator.clipboard.writeText(shareUrl)
                         toast({
-                            title: 'Success',
-                            description: 'Link berhasil disalin',
-                        });
+                            title: "Success",
+                            description: "Link berhasil disalin",
+                        })
                     }}
                 >
                     Salin link
@@ -165,88 +151,88 @@ function FormSubmissions() {
             <Separator className="my-6 bg-primary" />
             <SubmissionTable />
         </div>
-    );
+    )
 
     type Row = { [key: string]: string } & {
-        submittedAt: Date;
-    };
+        submittedAt: Date
+    }
     function SubmissionTable() {
-        const [forms, setForms] = useState<FormResponse>();
-        const { formId } = useParams();
+        const [forms, setForms] = useState<FormResponse>()
+        const { formId } = useParams()
 
         const getFormById = useCallback(async () => {
             try {
                 const response = await fetch(`/api/v1/forms/${formId}`, {
-                    method: 'GET',
+                    method: "GET",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                     },
-                });
-                const body = await response.json();
+                })
+                const body = await response.json()
                 if (!body.errors) {
-                    setForms(body.data);
+                    setForms(body.data)
                 } else {
-                    throw new Error(body.errors);
+                    throw new Error(body.errors)
                 }
             } catch (error) {
-                console.log(error);
+                console.log(error)
                 toast({
-                    title: 'Error',
+                    title: "Error",
                     description: `${error}`,
-                    variant: 'destructive',
-                });
+                    variant: "destructive",
+                })
             }
-        }, [formId]);
+        }, [formId])
 
         useEffect(() => {
-            getFormById();
-        }, [getFormById]);
+            getFormById()
+        }, [getFormById])
 
-        const formcontent = forms?.content !== undefined ? forms.content : '[]';
-        const formElements = JSON.parse(formcontent) as FormElementInstance[];
+        const formcontent = forms?.content !== undefined ? forms.content : "[]"
+        const formElements = JSON.parse(formcontent) as FormElementInstance[]
 
         const columns: {
-            id: string;
-            label: string;
-            required: boolean;
-            type: ElementsType;
-        }[] = [];
+            id: string
+            label: string
+            required: boolean
+            type: ElementsType
+        }[] = []
 
         formElements.forEach((el) => {
             switch (el.type) {
-                case 'TextField':
-                case 'NumberField':
-                case 'TextAreaField':
-                case 'DateField':
-                case 'SelectField':
-                case 'CheckboxField':
+                case "TextField":
+                case "NumberField":
+                case "TextAreaField":
+                case "DateField":
+                case "SelectField":
+                case "CheckboxField":
                     columns.push({
                         id: el.id,
                         label: el.extraAttr?.label,
                         required: el.extraAttr?.required,
                         type: el.type,
-                    });
-                    break;
+                    })
+                    break
                 default:
-                    break;
+                    break
             }
-        });
+        })
 
-        const rows: Row[] = [];
+        const rows: Row[] = []
         forms?.formDetails.forEach((details) => {
-            const content = JSON.parse(details.content);
+            const content = JSON.parse(details.content)
             rows.push({
                 ...content,
                 submittedAt: details.createdAt,
-            });
-        });
+            })
+        })
 
         return (
             <>
-                <h1 className="text-2xl font-semibold col-span-2 text-left">
+                <h1 className="col-span-2 text-2xl font-semibold text-left">
                     Jawaban
                 </h1>
-                <div className="rounded-lg border text-left">
+                <div className="text-left border rounded-lg">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -257,6 +243,7 @@ function FormSubmissions() {
                                     </TableHead>
                                 ))}
                                 <TableHead>Dikirm Pada</TableHead>
+                                <TableHead>Edit</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -270,43 +257,52 @@ function FormSubmissions() {
                                             value={row[col.id]}
                                         />
                                     ))}
-                                    <TableCell className="text-muted-foreground text-left">
-                                        {formatDistance(
-                                            row.submittedAt,
-                                            new Date(),
-                                            { addSuffix: true }
-                                        )}
+                                    <TableCell className="text-left text-muted-foreground">
+                                        {format(row.submittedAt, "PP")}
                                     </TableCell>
+                                    <td>
+                                        <Button
+                                            size={"icon"}
+                                            className="my-2"
+                                            asChild
+                                        >
+                                            <Link
+                                                to={`/form/edit/${forms?.shareURL}/${forms?.formDetails[index].id}`}
+                                            >
+                                                <FaEdit />
+                                            </Link>
+                                        </Button>
+                                    </td>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </div>
             </>
-        );
+        )
     }
 
     function RowCell({ type, value }: { type: ElementsType; value: string }) {
-        let node: ReactNode = value;
+        let node: ReactNode = value
 
         switch (type) {
-            case 'DateField': {
-                if (!value) break;
-                const date = new Date(value);
+            case "DateField": {
+                if (!value) break
+                const date = new Date(value)
                 node = (
-                    <Badge variant={'outline'}>
-                        {format(date, 'dd/MM/yyyy')}
+                    <Badge variant={"outline"}>
+                        {format(date, "dd/MM/yyyy")}
                     </Badge>
-                );
-                break;
+                )
+                break
             }
-            case 'CheckboxField': {
-                const checked = value === 'true';
-                node = <Checkbox checked={checked} disabled />;
-                break;
+            case "CheckboxField": {
+                const checked = value === "true"
+                node = <Checkbox checked={checked} disabled />
+                break
             }
         }
 
-        return <TableCell>{node}</TableCell>;
+        return <TableCell>{node}</TableCell>
     }
 }

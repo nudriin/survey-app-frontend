@@ -5,19 +5,35 @@ import pky from "../assets/images/web/pky.png"
 import { FormResponse } from "@/model/FormModel"
 import { useRef, useState } from "react"
 import { toast } from "@/hooks/use-toast"
-import Confetti from "react-confetti"
+import { Link, useNavigate } from "react-router-dom"
+import { useTheme } from "next-themes"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
+import { Moon, Sun } from "lucide-react"
+import Logout from "./Logout"
 
-export default function FormSubmitComponent({
+export default function FormResponseEditComponent({
     form,
     content,
+    detailContent,
+    detailId,
 }: {
     form: FormResponse | undefined
     content: FormElementInstance[]
+    detailContent: string | undefined
+    detailId: number
 }) {
-    const formValues = useRef<{ [key: string]: string }>({})
+    const safeDetailContent = detailContent !== undefined ? detailContent : "[]"
+    const detailContents = JSON.parse(safeDetailContent)
+    const formValues = useRef<{ [key: string]: string }>(detailContents)
     const formErrors = useRef<{ [key: string]: boolean }>({})
     const [renderKey, setRenderKey] = useState(new Date().getTime())
-    const [submitted, setSubmitted] = useState(false)
+    const { setTheme } = useTheme()
+    const navigate = useNavigate()
 
     const validateForm = (): boolean => {
         for (const field of content) {
@@ -41,6 +57,7 @@ export default function FormSubmitComponent({
 
     const handleSubmit = async () => {
         formErrors.current = {}
+        console.log(formValues.current)
         const validForm = validateForm()
         if (!validForm) {
             setRenderKey(new Date().getTime())
@@ -52,23 +69,22 @@ export default function FormSubmitComponent({
             return
         }
 
-        console.log(formValues.current)
-
         try {
             const data = JSON.stringify(formValues.current)
-            const response = await fetch(`/api/v1/forms/url`, {
+            const response = await fetch(`/api/v1/forms/url/detail`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    detailId: detailId,
                     shareURL: form?.shareURL,
                     content: data,
                 }),
             })
             const body = await response.json()
             if (!body.errors) {
-                setSubmitted(true)
+                navigate(`/`)
             } else {
                 throw new Error(body.errors)
             }
@@ -81,32 +97,50 @@ export default function FormSubmitComponent({
         }
     }
 
-    if (submitted) {
-        return (
-            <>
-                <Confetti
-                    width={window.innerWidth}
-                    height={window.innerHeight}
-                    recycle={false}
-                    numberOfPieces={1000}
-                />
-                <div className="flex flex-col items-center justify-center w-full min-h-screen">
-                    <div className="max-w-md p-6 text-left border-2 rounded-lg border-darks2 shadow-box">
-                        <h1 className="pb-2 mb-10 text-4xl font-semibold border-b text-purples">
-                            Formulir berhasil di kirim
-                        </h1>
-                        <h3 className="pb-10 text-sm border-b text-muted-foreground">
-                            Terimakasih telah mengisi formulir ini, kamu boleh
-                            keluar dari halaman ini.
-                        </h3>
-                    </div>
-                </div>
-            </>
-        )
-    }
-
     return (
         <div className="w-full lg:max-w-[650px] mx-auto">
+            <nav className="p-2 mb-2 rounded-lg ">
+                <ul className="flex items-center justify-end gap-2">
+                    <li>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon">
+                                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                    <span className="sr-only">
+                                        Toggle theme
+                                    </span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                    onClick={() => setTheme("light")}
+                                >
+                                    Light
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => setTheme("dark")}
+                                >
+                                    Dark
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => setTheme("system")}
+                                >
+                                    System
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </li>
+                    <li>
+                        <Button variant={"outline"} asChild>
+                            <Link to="/">Dashboard</Link>
+                        </Button>
+                    </li>
+                    <li>
+                        <Logout />
+                    </li>
+                </ul>
+            </nav>
             <header className="p-6 text-white border-2 bg-gradient-to-b md:bg-gradient-to-r from-purples to-cyan-500 rounded-xl shadow-box border-darks2 dark:shadow-light dark:border-primary">
                 <div className="items-center justify-center col-span-4 gap-3 sm:flex md:text-left ">
                     <div>
@@ -146,7 +180,7 @@ export default function FormSubmitComponent({
                                 elementInstance={element}
                                 submitValue={submitValue}
                                 isInvalid={formErrors.current[element.id]}
-                                defaultValue={formValues.current[element.id]}
+                                defaultValue={detailContents[element.id]}
                             />
                         )
                     })}
