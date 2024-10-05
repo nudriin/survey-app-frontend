@@ -39,3 +39,10 @@ export interface MonthlySubmissionCount {
     date: Date
     count: number
 }
+
+export interface FormDetails {
+    id: number
+    createdAt: Date
+    formId: number
+    content: string
+}

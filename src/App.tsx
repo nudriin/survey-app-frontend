@@ -7,6 +7,7 @@ import FormDetail from "./pages/admin/FormDetail"
 import SumbitPage from "./pages/public/SubmitPage"
 import PrivateRoute from "./components/PrivateRoute"
 import SignRoute from "./components/SignRoute"
+import FormEditResponse from "./pages/admin/FormEditResponse"
 
 function App() {
     return (
@@ -21,6 +22,10 @@ function App() {
                     <Route path="/login" element={<Login />} />
                 </Route>
                 <Route path="/form/:shareURL" element={<SumbitPage />} />
+                <Route
+                    path="/form/edit/:shareURL/:detailId"
+                    element={<FormEditResponse />}
+                />
             </Routes>
         </BrowserRouter>
     )

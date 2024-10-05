@@ -89,7 +89,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         to="/"
                         className="order-2 mx-auto h-28 md:h-36 lg:h-48 md:order-1"
                     >
-                        <img className="h-48" src={pky} alt="" />
+                        <img
+                            className="w-[150px] mx-auto my-auto"
+                            src={pky}
+                            alt=""
+                        />
                     </Link>
                 </div>
             </header>

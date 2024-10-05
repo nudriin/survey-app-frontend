@@ -8,30 +8,30 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from './ui/alert-dialog';
-import { Button } from './ui/button';
-import { MdOutlinePublish } from 'react-icons/md';
-import { FaIcons } from 'react-icons/fa';
-import { useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { toast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
-import useDesigner from '@/hooks/useDesigner';
+} from "./ui/alert-dialog"
+import { Button } from "./ui/button"
+import { MdOutlinePublish } from "react-icons/md"
+import { FaIcons } from "react-icons/fa"
+import { useState } from "react"
+import { useCookies } from "react-cookie"
+import { toast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
+import useDesigner from "@/hooks/useDesigner"
 
 export default function PublishFormBtn({ id }: { id: number | undefined }) {
-    const [loading, setLoading] = useState<boolean>(false);
-    const [cookie] = useCookies(['auth']);
-    const token = cookie.auth;
-    const navigate = useNavigate();
-    const { elements } = useDesigner();
+    const [loading, setLoading] = useState<boolean>(false)
+    const [cookie] = useCookies(["auth"])
+    const token = cookie.auth
+    const navigate = useNavigate()
+    const { elements } = useDesigner()
 
     const publishForm = async () => {
         try {
-            setLoading(true);
-            const response = await fetch('/api/v1/forms', {
-                method: 'PATCH',
+            setLoading(true)
+            const response = await fetch("/api/v1/forms", {
+                method: "PATCH",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
@@ -39,35 +39,35 @@ export default function PublishFormBtn({ id }: { id: number | undefined }) {
                     content: JSON.stringify(elements),
                     published: true,
                 }),
-            });
+            })
 
-            const body = await response.json();
+            const body = await response.json()
             if (!body.errors) {
                 toast({
-                    title: 'Sukses',
-                    description: 'Form berhasil di publikasikan',
-                });
-                setLoading(false);
-                navigate(0);
+                    title: "Sukses",
+                    description: "Form berhasil di publikasikan",
+                })
+                setLoading(false)
+                navigate(`/forms/${id}`)
             } else {
                 toast({
-                    title: 'Error',
-                    description: 'Gagal mem publikasikan form',
-                    variant: 'destructive',
-                });
-                setLoading(false);
-                throw new Error(body.errors);
+                    title: "Error",
+                    description: "Gagal mempublikasikan form",
+                    variant: "destructive",
+                })
+                setLoading(false)
+                throw new Error(body.errors)
             }
         } catch (error) {
-            navigate(0);
-            setLoading(false);
+            navigate(0)
+            setLoading(false)
             toast({
-                title: 'Error',
+                title: "Error",
                 description: `${error}`,
-                variant: 'destructive',
-            });
+                variant: "destructive",
+            })
         }
-    };
+    }
 
     return (
         <AlertDialog>
@@ -100,5 +100,5 @@ export default function PublishFormBtn({ id }: { id: number | undefined }) {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    );
+    )
 }

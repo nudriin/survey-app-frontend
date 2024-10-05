@@ -17,21 +17,33 @@ import { useCallback, useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
 import { BsEyeFill } from "react-icons/bs"
 import { FaEdit, FaWpforms } from "react-icons/fa"
-import { BiRightArrowAlt } from "react-icons/bi"
-import { Link } from "react-router-dom"
+import { BiRightArrowAlt, BiSolidTrash } from "react-icons/bi"
+import { Link, useNavigate } from "react-router-dom"
 import DistributionCharts from "@/components/DistributionCharts"
 import MonthlySubmissionCharts from "@/components/MonthlySubmissionCharts"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { toast } from "@/hooks/use-toast"
 
 export default function Dashboard() {
     return (
         <div>
             <StatsCards />
             <Separator className="my-6 bg-primary" />
-            <h1 className="text-2xl font-semibold col-span-2 text-left">
+            <h1 className="col-span-2 text-2xl font-semibold text-left">
                 Formulir Survei
             </h1>
             <Separator className="my-6 bg-primary" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <CreateFormBtn />
                 <FormsCards />
             </div>
@@ -70,27 +82,27 @@ function StatsCards() {
 
     return (
         <DashboardLayout>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+            <div className="grid w-full grid-cols-1 gap-4 pt-8 md:grid-cols-2 lg:grid-cols-3 ">
                 <StatsCard
                     title="Total Kunjungan"
                     value={statistics?.totalVisit}
                     helperText="Jumlah total data kunjungan pada seluruh formulir"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 md:col-span-2 lg:col-span-1 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 md:col-span-2 lg:col-span-1 dark:border-primary"
                 />
                 <StatsCard
                     title="Total Jawaban"
                     value={statistics?.totalSubmission}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
                 <StatsCard
                     title="Jawaban Bulan ini"
                     value={statistics?.totalSubmissionThisMonth}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
-                    className="shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary rounded-lg text-left"
+                    className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
             </div>
-            <div className="w-full pt-8 grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <div className="grid w-full grid-cols-1 gap-4 pt-8 md:grid-cols-2 ">
                 <DistributionCharts />
                 <MonthlySubmissionCharts />
             </div>
@@ -111,11 +123,11 @@ function StatsCard({
 }) {
     return (
         <Card className={className}>
-            <CardHeader className="space-y-0 pb-2">
+            <CardHeader className="pb-2 space-y-0">
                 <CardTitle className="">{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <h1 className="text-4xl font-bold my-2 text-purples">
+                <h1 className="my-2 text-4xl font-bold text-purples">
                     {value}
                 </h1>
                 <p className="text-sm text-muted-foreground">{helperText}</p>
@@ -162,8 +174,9 @@ function FormsCards() {
 }
 
 function FormsCard({ form }: { form: FormResponse }) {
+    const navigate = useNavigate()
     return (
-        <Card className="group border-primary/20 h-full rounded-lg hover:cursor-pointer gap-4 shadow-box dark:shadow-light border-2 border-darks2 dark:border-primary text-left">
+        <Card className="h-full gap-4 text-left border-2 rounded-lg group border-primary/20 hover:cursor-pointer shadow-box dark:shadow-light border-darks2 dark:border-primary">
             <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                     <span className="truncate">{form.name}</span>
@@ -172,7 +185,7 @@ function FormsCard({ form }: { form: FormResponse }) {
                         <Badge variant="destructive">Draft</Badge>
                     )}
                 </CardTitle>
-                <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
+                <CardDescription className="flex items-center justify-between text-sm text-muted-foreground">
                     {formatDistance(form.createdAt, new Date(), {
                         addSuffix: true,
                     })}
@@ -189,28 +202,126 @@ function FormsCard({ form }: { form: FormResponse }) {
             <CardContent className="truncate">
                 {form.description || "Tidak ada deskripsi"}
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex gap-2">
                 {form.published && (
                     <Button
                         asChild
-                        className="gap-2 text-white bg-purples w-full"
+                        className="w-full gap-2 text-white bg-purples"
                     >
                         <Link to={`/forms/${form.id}`}>
-                            Lihat Jawaban <BiRightArrowAlt />
+                            Lihat <BiRightArrowAlt />
                         </Link>
                     </Button>
                 )}
-                {!form.published && (
+                {form.published ? (
+                    <DialogButton
+                        isDelete={false}
+                        dialogTitle="Peringatan !!!"
+                        dialogDescription="Dengan mengedit formulir ini, kamu mungkin akan kehilangan beberapa data jawaban yang sebelumnya telah tersimpan di formulir"
+                        id={form.id}
+                        dialogActionText="Edit"
+                        className="w-full gap-2 text-secondary bg-primary"
+                        dialogActionClass="text-secondary bg-primary"
+                    />
+                ) : (
                     <Button
-                        asChild
-                        className="gap-2 bg-muted-foreground text-white w-full"
+                        className="w-full gap-2 text-secondary bg-primary"
+                        onClick={() => navigate(`/build/${form.id}`)}
                     >
-                        <Link to={`/build/${form.id}`}>
-                            Edit Formulir <FaEdit />
-                        </Link>
+                        Edit
+                        <FaEdit />
                     </Button>
                 )}
+                <DialogButton
+                    isDelete={true}
+                    dialogTitle="Peringatan !!!"
+                    dialogDescription="Dengan menghapus formulir ini, kamu akan kehilangan seluruh data jawaban yang tersimpan di formulir"
+                    id={form.id}
+                    dialogActionText="Hapus"
+                    className="w-full gap-2 text-white bg-destructive"
+                    dialogActionClass="text-white bg-destructive"
+                />
             </CardFooter>
         </Card>
+    )
+}
+
+function DialogButton({
+    isDelete,
+    dialogTitle,
+    dialogDescription,
+    dialogActionText,
+    dialogActionClass,
+    id,
+    className,
+}: {
+    isDelete: boolean
+    dialogTitle: string
+    dialogDescription: string
+    dialogActionText: string
+    dialogActionClass: string
+    id: number
+    className: string
+}) {
+    const navigate = useNavigate()
+    const [cookie] = useCookies(["auth"])
+    const token = cookie.auth
+
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`/api/v1/forms/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            const body = await response.json()
+            if (!body.errors) {
+                toast({
+                    title: "Sukses",
+                    description: "Form berhasil dihapus",
+                })
+                navigate(0)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "Error",
+                description: "Ada sesuatu yang salah, silahkan coba lagi",
+                variant: "destructive",
+            })
+        }
+    }
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className={className} size={"icon"}>
+                    {isDelete ? <BiSolidTrash /> : <FaEdit />}
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        <span>{dialogDescription}</span>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                    <AlertDialogAction
+                        className={dialogActionClass}
+                        onClick={() =>
+                            isDelete ? handleDelete() : navigate(`/build/${id}`)
+                        }
+                    >
+                        {dialogActionText}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }

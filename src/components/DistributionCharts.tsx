@@ -18,6 +18,7 @@ import { Pie, PieChart } from "recharts"
 import { SubmissionDistributionByForm } from "@/model/FormModel"
 import { useCookies } from "react-cookie"
 import { IoTrendingUp } from "react-icons/io5"
+import { TbMoodEmpty } from "react-icons/tb"
 
 export default function DistributionCharts() {
     const [chartData, setChartata] = useState<SubmissionDistributionByForm[]>(
@@ -59,6 +60,32 @@ export default function DistributionCharts() {
     useEffect(() => {
         getAllDailyStats()
     }, [getAllDailyStats])
+
+    if (!loading && chartData.length === 0) {
+        return (
+            <Card className="flex flex-col border-2 shadow-box dark:shadow-light border-primary">
+                <CardHeader className="items-center pb-0">
+                    <CardTitle>
+                        Distribusi Jawaban Pada setiap Formulir
+                    </CardTitle>
+                    <CardDescription>All Time</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-center flex-1 gap-2 text-purples">
+                    <h1 className="text-xl font-semibold">
+                        Data tidak tersedia
+                    </h1>
+                    <TbMoodEmpty size={30} />
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-2 text-sm">
+                    <div className="flex items-center gap-2 font-medium leading-none">
+                        Distribusi seluruh jawaban yang ada pada formulir{" "}
+                        <IoTrendingUp className="w-4 h-4" />
+                    </div>
+                </CardFooter>
+            </Card>
+        )
+    }
+
     let data
     if (!loading) {
         data = chartData.map((value, index) => {
@@ -81,7 +108,7 @@ export default function DistributionCharts() {
         },
     } satisfies ChartConfig
     return (
-        <Card className="flex flex-col shadow-box dark:shadow-light border-2 border-primary">
+        <Card className="flex flex-col border-2 shadow-box dark:shadow-light border-primary">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Distribusi Jawaban Pada setiap Formulir</CardTitle>
                 <CardDescription>All Time</CardDescription>
