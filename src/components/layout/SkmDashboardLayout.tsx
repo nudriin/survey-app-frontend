@@ -104,7 +104,9 @@ export default function SkmDashboardLayout({
             </header>
             <main className="flex w-full h-full gap-4 mt-4">
                 <SkmSidebar />
-                <div>{children}</div>
+                <div className="w-full h-full min-h-screen p-4 border-2 rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary">
+                    {children}
+                </div>
             </main>
         </section>
     )
