@@ -8,6 +8,7 @@ import SumbitPage from "./pages/public/SubmitPage"
 import PrivateRoute from "./components/PrivateRoute"
 import SignRoute from "./components/SignRoute"
 import FormEditResponse from "./pages/admin/FormEditResponse"
+import SkmDashboard from "./pages/skm/admin/SkmDashboard"
 
 function App() {
     return (
@@ -26,6 +27,8 @@ function App() {
                     path="/form/edit/:shareURL/:detailId"
                     element={<FormEditResponse />}
                 />
+
+                <Route path="/skm/dashboard" element={<SkmDashboard />} />
             </Routes>
         </BrowserRouter>
     )
