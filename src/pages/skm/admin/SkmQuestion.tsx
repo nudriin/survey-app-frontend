@@ -10,6 +10,8 @@ import {
     createColumnHelper,
 } from "@tanstack/react-table"
 import CreateQuestionBtn from "@/components/skm/CreateQuestionBtn"
+import { Button } from "@/components/ui/button"
+import DeleteQuestionBtn from "@/components/skm/DeleteQuestionBtn"
 
 const columnHelper = createColumnHelper<QuestionResponse>()
 
@@ -73,6 +75,14 @@ function QuestionTable() {
         columnHelper.accessor("option_4", {
             cell: (info) => <span className="">{info.getValue()}</span>,
             header: () => <span>Opsi 4</span>,
+        }),
+        columnHelper.accessor("id", {
+            cell: (info) => (
+                <div className="flex items-center justify-center p-2">
+                    <DeleteQuestionBtn id={info.getValue()} />
+                </div>
+            ),
+            header: () => <span>Aksi</span>,
         }),
     ]
 
