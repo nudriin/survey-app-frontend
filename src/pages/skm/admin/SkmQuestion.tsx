@@ -10,8 +10,8 @@ import {
     createColumnHelper,
 } from "@tanstack/react-table"
 import CreateQuestionBtn from "@/components/skm/CreateQuestionBtn"
-import { Button } from "@/components/ui/button"
 import DeleteQuestionBtn from "@/components/skm/DeleteQuestionBtn"
+import UpdateQuestionBtn from "@/components/skm/UpdateQuestionBtn"
 
 const columnHelper = createColumnHelper<QuestionResponse>()
 
@@ -78,7 +78,8 @@ function QuestionTable() {
         }),
         columnHelper.accessor("id", {
             cell: (info) => (
-                <div className="flex items-center justify-center p-2">
+                <div className="flex items-center justify-center gap-1 p-2">
+                    <UpdateQuestionBtn id={info.getValue()} />
                     <DeleteQuestionBtn id={info.getValue()} />
                 </div>
             ),
