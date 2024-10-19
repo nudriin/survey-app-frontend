@@ -10,6 +10,7 @@ import SignRoute from "./components/SignRoute"
 import FormEditResponse from "./pages/admin/FormEditResponse"
 import SkmDashboard from "./pages/skm/admin/SkmDashboard"
 import SkmSubmit from "./pages/skm/pubic/SkmSubmit"
+import SkmQuestion from "./pages/skm/admin/SkmQuestion"
 
 function App() {
     return (
@@ -31,6 +32,7 @@ function App() {
 
                 <Route path="/skm/dashboard" element={<SkmDashboard />} />
                 <Route path="/skm/submit" element={<SkmSubmit />} />
+                <Route path="/skm/question" element={<SkmQuestion />} />
             </Routes>
         </BrowserRouter>
     )
