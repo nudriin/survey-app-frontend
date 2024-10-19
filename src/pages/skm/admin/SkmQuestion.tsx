@@ -9,6 +9,7 @@ import {
     flexRender,
     createColumnHelper,
 } from "@tanstack/react-table"
+import CreateQuestionBtn from "@/components/skm/CreateQuestionBtn"
 
 const columnHelper = createColumnHelper<QuestionResponse>()
 
@@ -90,10 +91,13 @@ function QuestionTable() {
 
     return (
         <>
-            <h1 className="mb-4 text-3xl font-semibold text-left">
-                Pertanyaaan
-            </h1>
-            <div className="overflow-x-auto">
+            <div className="flex justify-between mb-4">
+                <h1 className="text-3xl font-semibold text-left">
+                    Pertanyaaan
+                </h1>
+                <CreateQuestionBtn />
+            </div>
+            <div className="overflow-x-auto text-left">
                 <table className="w-full">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -101,7 +105,7 @@ function QuestionTable() {
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className="border-2 rounded-lg border-primary"
+                                        className="p-1 border-2 rounded-lg border-primary"
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -121,7 +125,7 @@ function QuestionTable() {
                                 {row.getVisibleCells().map((cell) => (
                                     <td
                                         key={cell.id}
-                                        className="border-2 rounded-lg border-primary"
+                                        className="p-1 border-2 rounded-lg border-primary"
                                     >
                                         {flexRender(
                                             cell.column.columnDef.cell,
