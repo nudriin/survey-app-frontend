@@ -9,9 +9,9 @@ import {
     flexRender,
     createColumnHelper,
 } from "@tanstack/react-table"
-import UpdateQuestionBtn from "@/components/skm/UpdateQuestionBtn"
 import { useCookies } from "react-cookie"
 import RespondenDeleteBtn from "@/components/skm/RespondenDeleteBtn"
+import RespondenDetailBtn from "@/components/skm/RespondenDetailBtn"
 
 const columnHelper = createColumnHelper<RespondenResponse>()
 
@@ -82,7 +82,7 @@ function RespondenTable() {
         columnHelper.accessor("id", {
             cell: (info) => (
                 <div className="flex items-center justify-center gap-1 p-2">
-                    <UpdateQuestionBtn id={info.getValue()} />
+                    <RespondenDetailBtn id={info.getValue()} />
                     <RespondenDeleteBtn id={info.getValue()} />
                 </div>
             ),
