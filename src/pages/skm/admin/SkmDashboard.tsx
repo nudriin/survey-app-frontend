@@ -1,6 +1,6 @@
 import StatsCard from "@/components/skm/StatsCard"
 import SkmDashboardLayout from "../../../components/layout/SkmDashboardLayout"
-import { NrrStatusTable } from "@/components/skm/SkmResultTable"
+import { NrrStatusTable } from "@/components/skm/SkmResultStatistics"
 import { ResponsesWithQuestionResponse } from "@/model/SkmModel"
 import { useCallback, useEffect, useState } from "react"
 export default function SkmDashboard() {

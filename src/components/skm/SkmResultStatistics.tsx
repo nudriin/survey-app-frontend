@@ -15,7 +15,7 @@ import {
 } from "../ui/card"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
-export default function SkmResultTable() {
+export default function SkmResultStatistics() {
     const [responsesQuestion, setResponsesQuestion] = useState<
         ResponsesWithQuestionResponse[]
     >([])

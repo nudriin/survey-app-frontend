@@ -1,5 +1,5 @@
 import SkmDashboardLayout from "@/components/layout/SkmDashboardLayout"
-import SkmResultTable from "@/components/skm/SkmResultTable"
+import SkmResultStatistics from "@/components/skm/SkmResultStatistics"
 
 export default function SkmResult() {
     return (
@@ -9,7 +9,7 @@ export default function SkmResult() {
                     Hasil Survei
                 </h1>
             </div>
-            <SkmResultTable />
+            <SkmResultStatistics />
         </SkmDashboardLayout>
     )
 }
