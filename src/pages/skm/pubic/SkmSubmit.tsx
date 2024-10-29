@@ -202,7 +202,7 @@ function QuestionCard() {
                                 placeholder="Cth: Elon Musk"
                                 value={responden.name}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                                 required
                             />
                         </div>
@@ -217,7 +217,7 @@ function QuestionCard() {
                                 placeholder="Cth: elonmusk@gmail.com"
                                 value={responden.email}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                                 required
                             />
                         </div>
@@ -232,7 +232,7 @@ function QuestionCard() {
                                 placeholder="Cth: 08123993xxxx"
                                 value={responden.phone}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                                 required
                             />
                         </div>
@@ -247,7 +247,7 @@ function QuestionCard() {
                                 placeholder="Cth: 20"
                                 value={responden.age || ""}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                                 required
                             />
                         </div>
@@ -262,7 +262,7 @@ function QuestionCard() {
                                 placeholder="Cth: JL. Pangeran"
                                 value={responden.address}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                             />
                         </div>
 
@@ -276,7 +276,7 @@ function QuestionCard() {
                                 placeholder="Cth: Guru"
                                 value={responden.profession}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                             />
                         </div>
 
@@ -288,7 +288,7 @@ function QuestionCard() {
                                 name="education"
                                 value={responden.education}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                             >
                                 <option selected hidden>
                                     Pilih Pendidikan
@@ -311,7 +311,7 @@ function QuestionCard() {
                                 name="gender"
                                 value={responden.gender}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                             >
                                 <option selected hidden>
                                     Pilih Jenis Kelamin
@@ -329,7 +329,7 @@ function QuestionCard() {
                                 name="service_type"
                                 value={responden.service_type}
                                 onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary"
+                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
                             >
                                 <option selected hidden>
                                     Pilih Jenis Layanan
