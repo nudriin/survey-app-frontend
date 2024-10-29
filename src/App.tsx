@@ -12,6 +12,7 @@ import SkmDashboard from "./pages/skm/admin/SkmDashboard"
 import SkmSubmit from "./pages/skm/pubic/SkmSubmit"
 import SkmQuestion from "./pages/skm/admin/SkmQuestion"
 import SkmResponden from "./pages/skm/admin/SkmResponden"
+import SkmResult from "./pages/skm/admin/SkmResult"
 
 function App() {
     return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/skm/submit" element={<SkmSubmit />} />
                 <Route path="/skm/question" element={<SkmQuestion />} />
                 <Route path="/skm/response" element={<SkmResponden />} />
+                <Route path="/skm/result" element={<SkmResult />} />
             </Routes>
         </BrowserRouter>
     )
