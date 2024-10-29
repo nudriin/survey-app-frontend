@@ -47,12 +47,7 @@ export default function SkmResultTable() {
 
     return (
         <>
-            <div className="flex justify-between mb-4">
-                <h1 className="text-3xl font-semibold text-left">
-                    Tabel Nilai Rata-Rata
-                </h1>
-            </div>
-            <div className="grid grid-cols-2 mb-10">
+            <div className="grid grid-cols-2 mb-3 gap-2">
                 <NrrStatusTable responsesQuestion={responsesQuestion} />
                 <NrrBarChart responsesQuestion={responsesQuestion} />
             </div>
@@ -67,7 +62,7 @@ export function ResultTable({
     responsesQuestion: ResponsesWithQuestionResponse[]
 }) {
     return (
-        <>
+        <div className="p-4 overflow-hidden border-2 rounded-lg shadow-box dark:shadow-light border-darks2">
             <div className="flex justify-between mb-4">
                 <h1 className="text-3xl font-semibold text-left">
                     Tabel Nilai Rata-Rata
@@ -191,7 +186,7 @@ export function ResultTable({
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     )
 }
 
@@ -201,9 +196,14 @@ export function NrrStatusTable({
     responsesQuestion: ResponsesWithQuestionResponse[]
 }) {
     return (
-        <div>
+        <div className="p-4 overflow-hidden border-2 rounded-lg shadow-box dark:shadow-light border-darks2">
+            <div className="flex justify-between mb-4">
+                <h1 className="text-3xl font-semibold text-left">
+                    Tabel Nilai Rata-Rata
+                </h1>
+            </div>
             <div className="overflow-x-auto text-left">
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr>
                             <th className="p-1 border-2 bg-purples text-white border-primary">
@@ -301,7 +301,7 @@ export function NrrBarChart({
     } satisfies ChartConfig
 
     return (
-        <Card>
+        <Card className="border-2 shadow-box dark:shadow-light border-primary">
             <CardHeader>
                 <CardTitle>Bar Chart - Rata-rata Penilaian</CardTitle>
                 <CardDescription>Penilaian per Pertanyaan</CardDescription>
