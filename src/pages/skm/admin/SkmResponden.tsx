@@ -112,13 +112,13 @@ function RespondenTable() {
             </div>
             <div className="overflow-x-auto text-left">
                 <table className="w-full">
-                    <thead>
+                    <thead className="bg-purples text-white">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className="p-1 border-2 rounded-lg border-primary"
+                                        className="p-1 border-2 border-primary"
                                     >
                                         {flexRender(
                                             header.column.columnDef.header,
@@ -133,12 +133,12 @@ function RespondenTable() {
                         {table.getRowModel().rows.map((row) => (
                             <tr
                                 key={row.id}
-                                className="border-2 rounded-lg border-primary"
+                                className="border-2 border-primary"
                             >
                                 {row.getVisibleCells().map((cell) => (
                                     <td
                                         key={cell.id}
-                                        className="p-1 border-2 rounded-lg border-primary"
+                                        className="p-1 border-2 border-primary"
                                     >
                                         {flexRender(
                                             cell.column.columnDef.cell,
