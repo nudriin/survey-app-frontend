@@ -52,3 +52,8 @@ export interface ResponsesWithQuestionResponse {
     status: boolean
     responses: Array<ResponsesResponse>
 }
+
+export interface RespondenCountResponseByGender {
+    total: number
+    gender: string
+}

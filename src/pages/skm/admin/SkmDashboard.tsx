@@ -1,12 +1,32 @@
 import StatsCard from "@/components/skm/StatsCard"
 import SkmDashboardLayout from "../../../components/layout/SkmDashboardLayout"
 import { NrrStatusTable } from "@/components/skm/SkmResultStatistics"
-import { ResponsesWithQuestionResponse } from "@/model/SkmModel"
+import {
+    RespondenCountResponseByGender,
+    ResponsesWithQuestionResponse,
+} from "@/model/SkmModel"
 import { useCallback, useEffect, useState } from "react"
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Pie, PieChart } from "recharts"
 export default function SkmDashboard() {
     const [responsesQuestion, setResponsesQuestion] = useState<
         ResponsesWithQuestionResponse[]
     >([])
+    const [countResponden, setCountResponden] = useState<number>(0)
 
     const getAllResponsesQuestion = useCallback(async () => {
         try {
@@ -29,9 +49,31 @@ export default function SkmDashboard() {
         }
     }, [])
 
+    const getCountResponden = useCallback(async () => {
+        try {
+            const response = await fetch("/api/v1/skm/responden/count/total", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            const body = await response.json()
+
+            if (!body.errors) {
+                setCountResponden(body.data)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
     useEffect(() => {
         getAllResponsesQuestion()
-    }, [getAllResponsesQuestion])
+        getCountResponden()
+    }, [getAllResponsesQuestion, getCountResponden])
 
     const quisionerTotal = responsesQuestion.length
     const unitIKM = Number(
@@ -60,7 +102,7 @@ export default function SkmDashboard() {
                 />
                 <StatsCard
                     title="Total Jawaban"
-                    value={0}
+                    value={countResponden}
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir"
                     className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
@@ -70,10 +112,114 @@ export default function SkmDashboard() {
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
                     className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
-                <div className="md:col-span-2 ">
+                <div className="col-span-full grid grid-cols-2 gap-2 w-full">
                     <NrrStatusTable responsesQuestion={responsesQuestion} />
+                    <RespondenByGenderChart />
                 </div>
             </div>
         </SkmDashboardLayout>
+    )
+}
+
+export function RespondenByGenderChart() {
+    const [countResponden, setCountResponden] = useState<
+        RespondenCountResponseByGender[]
+    >([])
+
+    const getCountRespondenGroupByGender = useCallback(async () => {
+        try {
+            const response = await fetch(
+                "/api/v1/skm/responden/count/total/gender",
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
+
+            const body = await response.json()
+
+            if (!body.errors) {
+                setCountResponden(body.data)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    useEffect(() => {
+        getCountRespondenGroupByGender()
+    }, [getCountRespondenGroupByGender])
+
+    const colorPurples = "#5831ee"
+    const colorLime = "#C7FE1E"
+    const chartData = countResponden.map((val, index) => {
+        return {
+            total: val.total,
+            gender: val.gender,
+            fill: index % 2 == 0 ? colorPurples : colorLime,
+        }
+    })
+
+    const chartConfig = {
+        MALE: {
+            label: "Laki - Laki",
+            color: colorPurples,
+        },
+        FEMALE: {
+            label: "Perempuan",
+            color: colorLime,
+        },
+    } satisfies ChartConfig
+    return (
+        <Card className="flex flex-col border-2 shadow-box dark:shadow-light border-primary">
+            <CardHeader className="items-center pb-0">
+                <CardTitle>Pie Chart - Distribusi responden</CardTitle>
+                <CardDescription>Berdasarkan jenis kelamin</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-0">
+                <ChartContainer
+                    config={chartConfig}
+                    className="mx-auto aspect-square max-h-[300px]"
+                >
+                    <PieChart>
+                        <ChartTooltip
+                            content={<ChartTooltipContent hideLabel />}
+                        />
+                        <Pie
+                            data={chartData}
+                            dataKey="total"
+                            labelLine={true}
+                            label={({ payload, ...props }) => {
+                                return (
+                                    <text
+                                        cx={props.cx}
+                                        cy={props.cy}
+                                        x={props.x}
+                                        y={props.y}
+                                        textAnchor={props.textAnchor}
+                                        dominantBaseline={
+                                            props.dominantBaseline
+                                        }
+                                        fill={colorPurples}
+                                        fontSize={15}
+                                        fontWeight={500}
+                                    >
+                                        {payload.total}
+                                    </text>
+                                )
+                            }}
+                        />
+                        <ChartLegend
+                            content={<ChartLegendContent nameKey="gender" />}
+                            className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                        />
+                    </PieChart>
+                </ChartContainer>
+            </CardContent>
+        </Card>
     )
 }
