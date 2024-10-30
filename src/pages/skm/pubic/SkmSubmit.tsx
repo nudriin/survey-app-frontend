@@ -4,6 +4,7 @@ import { HiCursorClick } from "react-icons/hi"
 import { useCallback, useEffect, useState } from "react"
 import { QuestionResponse, RespondenResponse } from "@/model/SkmModel"
 import Confetti from "react-confetti"
+import Footer from "@/components/Footer"
 
 export default function SkmSubmit() {
     return (
@@ -414,6 +415,7 @@ function QuestionCard() {
                     {isSubmitting ? "Mengirim..." : "Kirim Survey"}
                 </Button>
             </form>
+            <Footer />
         </>
     )
 }

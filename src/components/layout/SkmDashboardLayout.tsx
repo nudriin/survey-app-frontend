@@ -13,6 +13,7 @@ import Logout from "../Logout"
 import pky from "../../assets/images/web/pky.png"
 import moment from "moment/min/moment-with-locales"
 import SkmSidebar from "../skm/SkmSidebar"
+import Footer from "../Footer"
 
 export default function SkmDashboardLayout({
     children,
@@ -103,11 +104,14 @@ export default function SkmDashboardLayout({
                 </div>
             </header>
             <main className="flex w-full h-full gap-4 mt-4">
-                <SkmSidebar />
+                <div>
+                    <SkmSidebar />
+                </div>
                 <div className="w-full h-full min-h-screen p-4 border-2 rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary overflow-x-auto">
                     {children}
                 </div>
             </main>
+            <Footer />
         </section>
     )
 }
