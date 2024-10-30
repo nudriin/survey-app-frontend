@@ -174,8 +174,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 defaultValue={responden.name}
                                                 value={responden.name}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
                                                 required
+                                                disabled
                                             />
                                         </div>
 
@@ -190,8 +191,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 defaultValue={responden.email}
                                                 value={responden.email}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
                                                 required
+                                                disabled
                                             />
                                         </div>
 
@@ -206,8 +208,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 defaultValue={responden.phone}
                                                 value={responden.phone}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
                                                 required
+                                                disabled
                                             />
                                         </div>
 
@@ -222,8 +225,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 defaultValue={responden.age}
                                                 value={responden.age || ""}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
                                                 required
+                                                disabled
                                             />
                                         </div>
 
@@ -238,7 +242,8 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 defaultValue={responden.address}
                                                 value={responden.address}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
+                                                disabled
                                             />
                                         </div>
 
@@ -255,7 +260,8 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                     responden.profession
                                                 }
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
+                                                disabled
                                             />
                                         </div>
 
@@ -270,7 +276,8 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                     responden.education
                                                 }
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
+                                                disabled
                                             >
                                                 <option selected hidden>
                                                     Pilih Pendidikan
@@ -298,7 +305,8 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 value={responden.gender}
                                                 defaultValue={responden.gender}
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
+                                                disabled
                                             >
                                                 <option selected hidden>
                                                     Pilih Jenis Kelamin
@@ -324,7 +332,8 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                     responden.service_type
                                                 }
                                                 onChange={handleRespondenChange}
-                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-slate-200 cursor-no-drop"
+                                                disabled
                                             >
                                                 <option selected hidden>
                                                     Pilih Jenis Layanan
