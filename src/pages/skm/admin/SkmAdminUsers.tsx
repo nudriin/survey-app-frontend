@@ -1,4 +1,5 @@
 import SkmDashboardLayout from "@/components/layout/SkmDashboardLayout"
+import AdminAddUserBtn from "@/components/skm/AdminAddUserBtn"
 import AdminDeleteUserBtn from "@/components/skm/AdminDeleteUserBtn"
 import { UserResponse } from "@/model/UserModel"
 import {
@@ -17,7 +18,12 @@ const columnHelper = createColumnHelper<UserResponse>()
 export default function SkmAdminUsers() {
     return (
         <SkmDashboardLayout>
-            <UsersTable />
+            <div>
+                <div className="flex justify-end mb-2">
+                    <AdminAddUserBtn />
+                </div>
+                <UsersTable />
+            </div>
         </SkmDashboardLayout>
     )
 }
