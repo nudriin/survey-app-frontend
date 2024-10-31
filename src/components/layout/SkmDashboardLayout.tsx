@@ -70,9 +70,15 @@ export default function SkmDashboardLayout({
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </li>
-                        <li>
+                        <li className="flex items-center gap-2">
+                            <Button asChild>
+                                <Link to="/skm/dashboard">SKM Dashboard</Link>
+                            </Button>
                             <Button variant={"outline"} asChild>
-                                <Link to="/">Dashboard</Link>
+                                <Link to="/">Form Builder</Link>
+                            </Button>
+                            <Button variant={"outline"} asChild>
+                                <Link to="/skm/submit">Survei</Link>
                             </Button>
                         </li>
                         <li>
