@@ -50,7 +50,7 @@ export default function SkmSidebar() {
                 Hasil Survei
             </NavLink>
             <NavLink
-                to="/skm/report"
+                to="/skm/users"
                 className={({ isActive }) =>
                     cn(
                         "w-full px-4 py-2 text-left hover:bg-white hover:text-purples rounded-xl",
@@ -58,7 +58,7 @@ export default function SkmSidebar() {
                     )
                 }
             >
-                Laporan
+                User & Admin
             </NavLink>
         </aside>
     )
