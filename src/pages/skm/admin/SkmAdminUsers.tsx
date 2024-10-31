@@ -1,4 +1,5 @@
 import SkmDashboardLayout from "@/components/layout/SkmDashboardLayout"
+import AdminDeleteUserBtn from "@/components/skm/AdminDeleteUserBtn"
 import { UserResponse } from "@/model/UserModel"
 import {
     createColumnHelper,
@@ -69,10 +70,10 @@ function UsersTable() {
             cell: (info) => <span className="">{info.getValue()}</span>,
             header: () => <span>Role</span>,
         }),
-        // columnHelper.accessor("id", {
-        //     cell: (info) => <AdminDeleteUserBtn id={info.getValue()} />,
-        //     header: () => <span>Aksi</span>,
-        // }),
+        columnHelper.accessor("id", {
+            cell: (info) => <AdminDeleteUserBtn id={info.getValue()} />,
+            header: () => <span>Aksi</span>,
+        }),
     ]
 
     const table = useReactTable({
