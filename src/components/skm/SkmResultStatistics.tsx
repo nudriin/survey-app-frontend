@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ResponsesWithQuestionResponse } from "@/model/SkmModel"
 import { useCallback, useEffect, useState } from "react"
 import {
@@ -15,6 +16,8 @@ import {
 } from "../ui/card"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 import StatsCard from "./StatsCard"
+import * as XLSX from "xlsx"
+import { Button } from "../ui/button"
 
 export default function SkmResultStatistics() {
     const [responsesQuestion, setResponsesQuestion] = useState<
@@ -86,8 +89,198 @@ export default function SkmResultStatistics() {
         ).toFixed(3)
     )
 
+    const exportAllToExcel = (
+        responsesQuestion: any[],
+        quisionerTotal: any,
+        countResponden: any,
+        unitIKM: any
+    ) => {
+        // Responses Sheet
+        const responsesSheet = XLSX.utils.json_to_sheet(
+            responsesQuestion.map(
+                (
+                    question: { responses: any[]; acronim: any },
+                    index: number
+                ) => {
+                    // Calculate NRR
+                    const nrr = (
+                        question.responses.reduce(
+                            (total: any, opt: { select_option: any }) =>
+                                total + opt.select_option,
+                            0
+                        ) / question.responses.length
+                    ).toFixed(3)
+
+                    // Determine the "Keterangan" based on NRR value
+                    let keterangan
+                    const floatNRR = parseFloat(nrr)
+                    if (floatNRR >= 1.0 && floatNRR <= 2.5996) {
+                        keterangan = "Tidak Baik"
+                    } else if (floatNRR >= 2.6 && floatNRR <= 3.064) {
+                        keterangan = "Kurang Baik"
+                    } else if (floatNRR >= 3.0644 && floatNRR <= 3.532) {
+                        keterangan = "Baik"
+                    } else {
+                        keterangan = "Sangat Baik"
+                    }
+
+                    // Return data for each row in the sheet
+                    return {
+                        No: index + 1,
+                        "Unsur Pelayanan": question.acronim,
+                        NRR: nrr,
+                        Keterangan: keterangan,
+                    }
+                }
+            )
+        )
+
+        // Summary Sheet
+        const summarySheet = XLSX.utils.json_to_sheet([
+            { Label: "Total Kuisioner", Value: quisionerTotal },
+            { Label: "Total Jawaban", Value: countResponden },
+            { Label: "IKM Unit Pelayanan", Value: unitIKM },
+        ])
+
+        // ResultTable Sheet
+        const resultTableData = []
+
+        // Header row
+        const headerRow = ["No"]
+        responsesQuestion.forEach((value: { acronim: string }) => {
+            headerRow.push(value.acronim)
+        })
+        resultTableData.push(headerRow)
+
+        // Populate each row of `select_option` values
+        responsesQuestion[0]?.responses.forEach((_: any, index: number) => {
+            const row = [index + 1]
+            responsesQuestion.forEach(
+                (question: {
+                    responses: { [x: string]: { select_option: any } }
+                }) => {
+                    row.push(question.responses[index].select_option)
+                }
+            )
+            resultTableData.push(row)
+        })
+
+        // Total row
+        const totalRow = ["Total"]
+        responsesQuestion.forEach((value: { responses: any[] }) => {
+            const total = value.responses.reduce(
+                (sum: any, opt: { select_option: any }) =>
+                    sum + opt.select_option,
+                0
+            )
+            totalRow.push(total)
+        })
+        resultTableData.push(totalRow)
+
+        // NRR/Unsur row
+        const nrrUnsurRow = ["NRR/Unsur"]
+        responsesQuestion.forEach((value: { responses: any[] }) => {
+            const nrr = (
+                value.responses.reduce(
+                    (sum: any, opt: { select_option: any }) =>
+                        sum + opt.select_option,
+                    0
+                ) / value.responses.length
+            ).toFixed(3)
+            nrrUnsurRow.push(nrr)
+        })
+        resultTableData.push(nrrUnsurRow)
+
+        // NRR Tertimbang row
+        const nrrTertimbangRow = ["NRR Tertimbang"]
+        responsesQuestion.forEach((value: { responses: any[] }) => {
+            const nrrTertimbang = (
+                (value.responses.reduce(
+                    (sum: any, opt: { select_option: any }) =>
+                        sum + opt.select_option,
+                    0
+                ) /
+                    value.responses.length) *
+                0.111
+            ).toFixed(3)
+            nrrTertimbangRow.push(nrrTertimbang)
+        })
+        resultTableData.push(nrrTertimbangRow)
+
+        // IKM Unit Pelayanan row
+        const ikmUnitRow = ["IKM Unit Pelayanan"]
+        const ikmUnitValue = (
+            responsesQuestion.reduce(
+                (grandTotal: number, value: { responses: any[] }) => {
+                    const nrrTertimbang =
+                        (value.responses.reduce(
+                            (sum: any, opt: { select_option: any }) =>
+                                sum + opt.select_option,
+                            0
+                        ) /
+                            value.responses.length) *
+                        0.111
+                    return grandTotal + nrrTertimbang
+                },
+                0
+            ) * 25
+        ).toFixed(3)
+        ikmUnitRow.push(ikmUnitValue)
+        for (let i = 1; i < responsesQuestion.length; i++) {
+            ikmUnitRow.push("")
+        }
+        resultTableData.push(ikmUnitRow)
+
+        const resultTableSheet = XLSX.utils.aoa_to_sheet(resultTableData)
+
+        // NrrBarChart Sheet
+        const chartData = responsesQuestion.map(
+            (item: { responses: any[] }, index: number) => {
+                const averageValue = (
+                    item.responses.reduce(
+                        (total: any, opt: { select_option: any }) =>
+                            total + opt.select_option,
+                        0
+                    ) / item.responses.length
+                ).toFixed(3)
+
+                return [`U${index + 1}`, averageValue]
+            }
+        )
+
+        const barChartSheetData = [
+            ["Label", "Rata-rata Penilaian"],
+            ...chartData,
+        ]
+        const nrrBarChartSheet = XLSX.utils.aoa_to_sheet(barChartSheetData)
+
+        // Create workbook and append all sheets
+        const workbook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(workbook, responsesSheet, "Responses")
+        XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary")
+        XLSX.utils.book_append_sheet(workbook, resultTableSheet, "ResultTable")
+        XLSX.utils.book_append_sheet(workbook, nrrBarChartSheet, "NrrBarChart")
+
+        // Export the workbook to an .xlsx file
+        XLSX.writeFile(workbook, "SurveyResults.xlsx")
+    }
+
     return (
         <div className="space-y-4">
+            <div className="flex justify-end">
+                <Button
+                    onClick={() =>
+                        exportAllToExcel(
+                            responsesQuestion,
+                            quisionerTotal,
+                            countResponden,
+                            unitIKM
+                        )
+                    }
+                >
+                    Export ke Excel
+                </Button>
+            </div>
             <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 ">
                 <StatsCard
                     title="Total Kuisioner"
@@ -217,7 +410,7 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr className="bg-muted-foreground text-secondary">
-                            <td className="p-1 border-2 border-primary border-r-secondary font-semibold text-left">
+                            <td className="p-1 border-2 border-primary font-semibold text-left">
                                 IKM Unit Pelayanan
                             </td>
                             <td
