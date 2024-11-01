@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ResponsesWithQuestionResponse } from "@/model/SkmModel"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
     ChartConfig,
     ChartContainer,
@@ -18,6 +18,9 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 import StatsCard from "./StatsCard"
 import * as XLSX from "xlsx"
 import { Button } from "../ui/button"
+import * as htmlToImage from "html-to-image"
+import { saveAs } from "file-saver"
+import { LuDownload } from "react-icons/lu"
 
 export default function SkmResultStatistics() {
     const [responsesQuestion, setResponsesQuestion] = useState<
@@ -537,6 +540,8 @@ export function NrrBarChart({
     responsesQuestion: ResponsesWithQuestionResponse[]
 }) {
     const color = "#5831ee"
+    const chartRef = useRef(null)
+
     const chartData = responsesQuestion.map((item, index) => ({
         label: `U${index + 1}`, // Label sesuai index + 1
         value: (
@@ -554,46 +559,64 @@ export function NrrBarChart({
         },
     } satisfies ChartConfig
 
+    const downloadChartAsPng = async () => {
+        if (chartRef.current) {
+            const dataUrl = await htmlToImage.toPng(chartRef.current)
+            saveAs(dataUrl, "grafik-rata-rata-penilaian.png")
+        }
+    }
+
     return (
-        <Card className="border-2 shadow-box dark:shadow-light border-primary">
-            <CardHeader>
-                <CardTitle>Bar Chart - Rata-rata Penilaian</CardTitle>
-                <CardDescription>Penilaian per Pertanyaan</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig}>
-                    <BarChart
-                        accessibilityLayer
-                        data={chartData}
-                        margin={{ top: 20 }}
-                    >
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="label"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar
-                            dataKey="value"
-                            fill={color}
-                            radius={3}
-                            barSize={30}
+        <div className="border-2 shadow-box dark:shadow-light border-primary rounded-lg">
+            <div className="flex justify-start">
+                <Button
+                    onClick={downloadChartAsPng}
+                    size={"icon"}
+                    className="left-0 m-2"
+                >
+                    <LuDownload />
+                </Button>
+            </div>
+            <Card ref={chartRef} className="border-0 shadow-none">
+                <CardHeader>
+                    <CardTitle>Bar Chart - Rata-rata Penilaian</CardTitle>
+                    <CardDescription>Penilaian per Pertanyaan</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer config={chartConfig}>
+                        <BarChart
+                            accessibilityLayer
+                            data={chartData}
+                            margin={{ top: 20 }}
                         >
-                            <LabelList
-                                position="top"
-                                offset={12}
-                                className="fill-foreground"
-                                fontSize={12}
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="label"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
                             />
-                        </Bar>
-                    </BarChart>
-                </ChartContainer>
-            </CardContent>
-        </Card>
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
+                            />
+                            <Bar
+                                dataKey="value"
+                                fill={color}
+                                radius={3}
+                                barSize={30}
+                            >
+                                <LabelList
+                                    position="top"
+                                    offset={12}
+                                    className="fill-foreground"
+                                    fontSize={12}
+                                />
+                            </Bar>
+                        </BarChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+        </div>
     )
 }

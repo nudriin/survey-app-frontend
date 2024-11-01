@@ -5,7 +5,7 @@ import {
     RespondenCountResponseByGender,
     ResponsesWithQuestionResponse,
 } from "@/model/SkmModel"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
     ChartConfig,
     ChartContainer,
@@ -22,6 +22,10 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Pie, PieChart } from "recharts"
+import * as htmlToImage from "html-to-image"
+import { saveAs } from "file-saver"
+import { LuDownload } from "react-icons/lu"
+import { Button } from "@/components/ui/button"
 export default function SkmDashboard() {
     const [responsesQuestion, setResponsesQuestion] = useState<
         ResponsesWithQuestionResponse[]
@@ -125,6 +129,7 @@ export function RespondenByGenderChart() {
     const [countResponden, setCountResponden] = useState<
         RespondenCountResponseByGender[]
     >([])
+    const chartRef = useRef(null)
 
     const getCountRespondenGroupByGender = useCallback(async () => {
         try {
@@ -174,52 +179,76 @@ export function RespondenByGenderChart() {
             color: colorLime,
         },
     } satisfies ChartConfig
+
+    const downloadChartAsPng = async () => {
+        if (chartRef.current) {
+            const dataUrl = await htmlToImage.toPng(chartRef.current)
+            saveAs(dataUrl, "grafik-Distribusi-jenis-kelamin.png")
+        }
+    }
+
     return (
-        <Card className="flex flex-col border-2 shadow-box dark:shadow-light border-primary">
-            <CardHeader className="items-center pb-0">
-                <CardTitle>Pie Chart - Distribusi responden</CardTitle>
-                <CardDescription>Berdasarkan jenis kelamin</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1 pb-0">
-                <ChartContainer
-                    config={chartConfig}
-                    className="mx-auto aspect-square max-h-[300px]"
+        <div className="border-2 shadow-box dark:shadow-light border-primary rounded-lg">
+            <div className="flex justify-start">
+                <Button
+                    onClick={downloadChartAsPng}
+                    size={"icon"}
+                    className="left-0 m-2"
                 >
-                    <PieChart>
-                        <ChartTooltip
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Pie
-                            data={chartData}
-                            dataKey="total"
-                            labelLine={true}
-                            label={({ payload, ...props }) => {
-                                return (
-                                    <text
-                                        cx={props.cx}
-                                        cy={props.cy}
-                                        x={props.x}
-                                        y={props.y}
-                                        textAnchor={props.textAnchor}
-                                        dominantBaseline={
-                                            props.dominantBaseline
-                                        }
-                                        fill={colorPurples}
-                                        fontSize={15}
-                                        fontWeight={500}
-                                    >
-                                        {payload.total}
-                                    </text>
-                                )
-                            }}
-                        />
-                        <ChartLegend
-                            content={<ChartLegendContent nameKey="gender" />}
-                            className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                        />
-                    </PieChart>
-                </ChartContainer>
-            </CardContent>
-        </Card>
+                    <LuDownload />
+                </Button>
+            </div>
+            <Card
+                ref={chartRef}
+                className="flex flex-col items-center border-0 shadow-none"
+            >
+                <CardHeader className="items-center pb-0">
+                    <CardTitle>Pie Chart - Distribusi responden</CardTitle>
+                    <CardDescription>Berdasarkan jenis kelamin</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 pb-0">
+                    <ChartContainer
+                        config={chartConfig}
+                        className="mx-auto aspect-square max-h-[300px]"
+                    >
+                        <PieChart>
+                            <ChartTooltip
+                                content={<ChartTooltipContent hideLabel />}
+                            />
+                            <Pie
+                                data={chartData}
+                                dataKey="total"
+                                labelLine={true}
+                                label={({ payload, ...props }) => {
+                                    return (
+                                        <text
+                                            cx={props.cx}
+                                            cy={props.cy}
+                                            x={props.x}
+                                            y={props.y}
+                                            textAnchor={props.textAnchor}
+                                            dominantBaseline={
+                                                props.dominantBaseline
+                                            }
+                                            fill={colorPurples}
+                                            fontSize={15}
+                                            fontWeight={500}
+                                        >
+                                            {payload.total}
+                                        </text>
+                                    )
+                                }}
+                            />
+                            <ChartLegend
+                                content={
+                                    <ChartLegendContent nameKey="gender" />
+                                }
+                                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                            />
+                        </PieChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
