@@ -114,7 +114,7 @@ function FormSubmissions() {
 
     return (
         <div className="mt-4">
-            <div className="flex flex-col items-start w-full gap-2 p-4 text-left border-2 rounded-lg border-primary">
+            <div className="flex flex-col items-start w-full gap-2 p-4 text-left border-2 rounded-lg border-primary bg-background">
                 <div className="flex items-center justify-between w-full gap-2">
                     <h1 className="text-4xl font-semibold text-left">
                         {forms?.name}
@@ -128,7 +128,7 @@ function FormSubmissions() {
                 </div>
                 <h2 className="lg:w-1/2">{forms?.description}</h2>
             </div>
-            <div className="flex items-center justify-between w-full gap-2 my-4 border-2 rounded-lg border-primary">
+            <div className="flex items-center justify-between w-full gap-2 my-4 border-2 rounded-lg border-primary bg-background">
                 <Input
                     className="w-full border-0 text-purples"
                     readOnly
@@ -148,7 +148,7 @@ function FormSubmissions() {
                 </Button>
             </div>
             <StatsCards forms={forms} />
-            <Separator className="my-6 bg-primary" />
+            <Separator className="my-6 bg-background" />
             <SubmissionTable />
         </div>
     )
@@ -239,16 +239,16 @@ function FormSubmissions() {
         return (
             <>
                 <div className="flex items-center justify-between col-span-2 mb-2">
-                    <h1 className="text-2xl font-semibold text-left">
+                    <h1 className="text-2xl font-semibold text-left text-background">
                         Jawaban
                     </h1>
                     <Button className="bg-primary" onClick={exportToExcel}>
                         Export (xlsx)
                     </Button>
                 </div>
-                <div className="text-left border rounded-lg">
+                <div className="text-left border rounded-lg bg-background">
                     <Table ref={tableRef}>
-                        <TableHeader>
+                        <TableHeader className="border-primary">
                             <TableRow>
                                 <TableHead>No.</TableHead>
                                 {columns.map((col, index) => (
@@ -260,7 +260,7 @@ function FormSubmissions() {
                                 <TableHead>Edit</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="border-primary">
                             {rows.map((row, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>

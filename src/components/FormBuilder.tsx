@@ -59,8 +59,8 @@ export default function FormBuilder({
     return (
         <DndContext sensors={sensors}>
             <DashboardLayout>
-                <main className="flex flex-col w-full">
-                    <nav className="flex items-center justify-between gap-4 p-4 border-b-2">
+                <main className="flex flex-col w-full gap-2 ">
+                    <nav className="flex items-center justify-between gap-4 p-4 mt-2 border-2 border-b-2 bg-background rounded-xl border-primary">
                         <h2 className="font-semibold truncate">
                             <span className="text-muted-foreground">
                                 Formulir:{" "}
@@ -73,8 +73,10 @@ export default function FormBuilder({
                             <PublishFormBtn id={form?.id} />
                         </div>
                     </nav>
-                    <div className="flex w-full flex-grow items-center justify-center relative overflow-auto min-h-screen bg-accent bg-[url(/paper.svg)]">
-                        <Designer />
+                    <div className="w-full h-full p-2 border-2 bg-background rounded-xl border-primary">
+                        <div className="flex w-full flex-grow items-center justify-center relative overflow-auto min-h-screen bg-background bg-[url(/paper.svg)]">
+                            <Designer />
+                        </div>
                     </div>
                 </main>
                 <DragOverlayWrapper />

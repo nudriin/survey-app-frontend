@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -6,7 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card"
 import {
     Form,
     FormControl,
@@ -15,59 +15,59 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { UserResponse } from '@/model/UserModel';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
+import { UserResponse } from "@/model/UserModel"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { useCookies } from "react-cookie"
+import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
-    email: z.string().email({ message: 'Email tidak valid' }).min(1).max(225),
+    email: z.string().email({ message: "Email tidak valid" }).min(1).max(225),
     password: z
         .string()
         .min(4, {
-            message: 'Password minimal 4 karakter',
+            message: "Password minimal 4 karakter",
         })
         .max(225),
-});
+})
 
-type formSchemaType = z.infer<typeof formSchema>;
+type formSchemaType = z.infer<typeof formSchema>
 
 export default function Login() {
     const form = useForm<formSchemaType>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: '',
-            password: '',
+            email: "",
+            password: "",
         },
-    });
+    })
 
-    const [, setCookie] = useCookies(['auth']);
-    const { toast } = useToast();
-    const navigate = useNavigate();
+    const [, setCookie] = useCookies(["auth"])
+    const { toast } = useToast()
+    const navigate = useNavigate()
 
     const handleFormSubmit = async (value: formSchemaType) => {
-        console.log(value);
+        console.log(value)
         try {
-            const response = await fetchLogin(value);
-            setCookie('auth', response.token);
+            const response = await fetchLogin(value)
+            setCookie("auth", response.token)
             toast({
-                title: 'Sukses',
-                description: 'Login berhasil',
-            });
-            navigate('/');
+                title: "Sukses",
+                description: "Login berhasil",
+            })
+            navigate("/skm/dashboard")
         } catch (error) {
             toast({
-                title: 'Error',
+                title: "Error",
                 description: `${error}`,
-                variant: 'destructive',
-            });
+                variant: "destructive",
+            })
         }
-    };
+    }
     return (
         <div className="min-h-screen flex justify-center items-center">
             <Card className="border-2 border-primary shadow-box dark:shadow-light text-left w-full md:w-1/2 lg:w-1/3 h-full">
@@ -137,22 +137,22 @@ export default function Login() {
                 </Form>
             </Card>
         </div>
-    );
+    )
 }
 
 async function fetchLogin(request: formSchemaType): Promise<UserResponse> {
-    const response = await fetch('/api/v1/users/login', {
-        method: 'POST',
+    const response = await fetch("/api/v1/users/login", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
-    });
+    })
 
-    const body = await response.json();
+    const body = await response.json()
     if (body.errors) {
-        throw new Error(body.errors);
+        throw new Error(body.errors)
     }
 
-    return body.data;
+    return body.data
 }

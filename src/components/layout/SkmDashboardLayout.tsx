@@ -12,8 +12,14 @@ import { Link } from "react-router-dom"
 import Logout from "../Logout"
 import pky from "../../assets/images/web/pky.png"
 import moment from "moment/min/moment-with-locales"
-import "moment/locale/id"
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+import SkmSidebar from "../skm/SkmSidebar"
+import Footer from "../Footer"
+
+export default function SkmDashboardLayout({
+    children,
+}: {
+    children: ReactNode
+}) {
     const { setTheme } = useTheme()
     const [date, setDate] = useState<string>()
     useEffect(() => {
@@ -103,7 +109,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     </Link>
                 </div>
             </header>
-            <main>{children}</main>
+            <main className="flex w-full h-full gap-4 mt-4">
+                <div>
+                    <SkmSidebar />
+                </div>
+                <div className="w-full h-full min-h-screen p-4 overflow-x-auto border-2 rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary bg-background">
+                    {children}
+                </div>
+            </main>
+            <Footer />
         </section>
     )
 }

@@ -38,11 +38,11 @@ export default function Dashboard() {
     return (
         <div>
             <StatsCards />
-            <Separator className="my-6 bg-primary" />
-            <h1 className="col-span-2 text-2xl font-semibold text-left">
+            <Separator className="my-6 bg-background" />
+            <h1 className="col-span-2 text-2xl font-semibold text-left text-background">
                 Formulir Survei
             </h1>
-            <Separator className="my-6 bg-primary" />
+            <Separator className="my-6 bg-background" />
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <CreateFormBtn />
                 <FormsCards />
