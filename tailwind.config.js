@@ -8,6 +8,9 @@ export default {
     ],
     theme: {
         extend: {
+            backgroundImage: {
+                'disdik-img': "url('/bg.png')"
+            },
             fontFamily: {
                 lato: 'Lato, sans-serif',
                 poppins: 'Poppins, sans-serif',

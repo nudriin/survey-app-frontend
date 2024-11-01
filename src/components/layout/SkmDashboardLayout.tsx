@@ -113,7 +113,7 @@ export default function SkmDashboardLayout({
                 <div>
                     <SkmSidebar />
                 </div>
-                <div className="w-full h-full min-h-screen p-4 border-2 rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary overflow-x-auto">
+                <div className="w-full h-full min-h-screen p-4 overflow-x-auto border-2 rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary bg-background">
                     {children}
                 </div>
             </main>

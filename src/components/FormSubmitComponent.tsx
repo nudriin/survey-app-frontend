@@ -126,7 +126,7 @@ export default function FormSubmitComponent({
                     />
                 </div>
             </header>
-            <div className="p-6 mt-6 text-left border-2 rounded-lg border-darks2 shadow-box dark:shadow-light dark:border-primary">
+            <div className="p-6 mt-6 text-left border-2 rounded-lg border-darks2 shadow-box dark:shadow-light dark:border-primary bg-background">
                 <h1 className="text-xl font-semibold">{form?.name}</h1>
                 <p className="text-sm text-muted-foreground">
                     {form?.description}
