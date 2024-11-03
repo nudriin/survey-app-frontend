@@ -117,9 +117,7 @@ function QuestionCard() {
 
             if (!bodyResponden.errors) {
                 setResponden(bodyResponden.data)
-                setIsSubmitting(false)
             } else {
-                setIsSubmitting(false)
                 setSubmitStatus("error")
                 throw new Error(bodyResponden.errors)
             }
@@ -151,6 +149,7 @@ function QuestionCard() {
                         throw new Error(bodyResponses.errors)
                     }
                 }
+                setIsSubmitting(false)
                 setSubmitStatus("success")
             }
         } catch (error) {
@@ -159,6 +158,23 @@ function QuestionCard() {
         } finally {
             setIsSubmitting(false)
         }
+    }
+
+    if (isSubmitting) {
+        return (
+            <>
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50">
+                    <div className="p-6 text-center bg-white rounded-md shadow-md">
+                        <p className="mb-4 text-lg font-semibold">
+                            Sedang mengirim data...
+                        </p>
+                        <p className="text-sm text-gray-600">
+                            Jangan tutup halaman atau keluar dari aplikasi.
+                        </p>
+                    </div>
+                </div>
+            </>
+        )
     }
 
     if (submitStatus === "success") {
