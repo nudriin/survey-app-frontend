@@ -81,7 +81,7 @@ export default function SkmResultStatistics() {
             responsesQuestion.reduce((grandTotal, value) => {
                 const ikmValue =
                     (value.responses.reduce(
-                        (total, opt) => total + opt.select_option,
+                        (total, opt) => total + (opt.select_option ?? 4),
                         0
                     ) /
                         value.responses.length) *
@@ -109,7 +109,7 @@ export default function SkmResultStatistics() {
                     const nrr = (
                         question.responses.reduce(
                             (total: any, opt: { select_option: any }) =>
-                                total + opt.select_option,
+                                total + (opt.select_option ?? 4),
                             0
                         ) / question.responses.length
                     ).toFixed(3)
@@ -162,7 +162,7 @@ export default function SkmResultStatistics() {
                 (question: {
                     responses: { [x: string]: { select_option: any } }
                 }) => {
-                    row.push(question.responses[index].select_option)
+                    row.push(question.responses[index].select_option ?? 4)
                 }
             )
             resultTableData.push(row)
@@ -173,7 +173,7 @@ export default function SkmResultStatistics() {
         responsesQuestion.forEach((value: { responses: any[] }) => {
             const total = value.responses.reduce(
                 (sum: any, opt: { select_option: any }) =>
-                    sum + opt.select_option,
+                    sum + (opt.select_option ?? 4),
                 0
             )
             totalRow.push(total)
@@ -186,7 +186,7 @@ export default function SkmResultStatistics() {
             const nrr = (
                 value.responses.reduce(
                     (sum: any, opt: { select_option: any }) =>
-                        sum + opt.select_option,
+                        sum + (opt.select_option ?? 4),
                     0
                 ) / value.responses.length
             ).toFixed(3)
@@ -200,7 +200,7 @@ export default function SkmResultStatistics() {
             const nrrTertimbang = (
                 (value.responses.reduce(
                     (sum: any, opt: { select_option: any }) =>
-                        sum + opt.select_option,
+                        sum + (opt.select_option ?? 4),
                     0
                 ) /
                     value.responses.length) *
@@ -218,7 +218,7 @@ export default function SkmResultStatistics() {
                     const nrrTertimbang =
                         (value.responses.reduce(
                             (sum: any, opt: { select_option: any }) =>
-                                sum + opt.select_option,
+                                sum + (opt.select_option ?? 4),
                             0
                         ) /
                             value.responses.length) *
@@ -242,7 +242,7 @@ export default function SkmResultStatistics() {
                 const averageValue = (
                     item.responses.reduce(
                         (total: any, opt: { select_option: any }) =>
-                            total + opt.select_option,
+                            total + (opt.select_option ?? 4),
                         0
                     ) / item.responses.length
                 ).toFixed(3)
@@ -356,10 +356,8 @@ export function ResultTable({
                                         key={question.id}
                                         className="p-1 border-2 rounded-lg border-primary"
                                     >
-                                        {
-                                            question.responses[index]
-                                                .select_option
-                                        }
+                                        {question?.responses[index]
+                                            ?.select_option ?? 4}
                                     </td>
                                 ))}
                             </tr>
@@ -479,7 +477,7 @@ export function NrrStatusTable({
                     </thead>
                     <tbody>
                         {responsesQuestion.map((value, index) => (
-                            <tr>
+                            <tr key={index}>
                                 <td className="p-1 border-2 border-primary px-2 py-1">
                                     U{index + 1}
                                 </td>
