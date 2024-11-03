@@ -124,14 +124,14 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
 
                 if (bodyResponses.errors) {
                     throw new Error(bodyResponses.errors)
-                } else {
-                    toast({
-                        title: "Sukses",
-                        description: "Jawaban berhasil diubah",
-                    })
-                    navigate(0)
                 }
             }
+            setIsSubmitting(false)
+            toast({
+                title: "Sukses",
+                description: "Jawaban berhasil diubah",
+            })
+            navigate(0)
             setSubmitStatus("success")
         } catch (error) {
             setSubmitStatus("error")
@@ -140,6 +140,24 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
             setIsSubmitting(false)
         }
     }
+
+    if (isSubmitting) {
+        return (
+            <>
+                <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50">
+                    <div className="p-6 text-center bg-white rounded-md shadow-md">
+                        <p className="mb-4 text-lg font-semibold">
+                            Sedang mengirim data...
+                        </p>
+                        <p className="text-sm text-gray-600">
+                            Jangan tutup halaman atau keluar dari aplikasi.
+                        </p>
+                    </div>
+                </div>
+            </>
+        )
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
