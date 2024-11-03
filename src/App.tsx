@@ -28,7 +28,6 @@ function App() {
                         element={<FormEditResponse />}
                     />
                     <Route path="/skm/dashboard" element={<SkmDashboard />} />
-                    <Route path="/skm/submit" element={<SkmSubmit />} />
                     <Route path="/skm/question" element={<SkmQuestion />} />
                     <Route path="/skm/response" element={<SkmResponden />} />
                     <Route path="/skm/result" element={<SkmResult />} />
@@ -38,6 +37,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                 </Route>
                 <Route path="/form/:shareURL" element={<SumbitPage />} />
+                <Route path="/skm/submit" element={<SkmSubmit />} />
             </Routes>
         </BrowserRouter>
     )
