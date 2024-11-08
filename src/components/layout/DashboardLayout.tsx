@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode } from "react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,24 +11,8 @@ import { useTheme } from "../context/ThemeProvider"
 import { Link } from "react-router-dom"
 import Logout from "../Logout"
 import pky from "../../assets/images/web/pky.png"
-import moment from "moment/min/moment-with-locales"
-import "moment/locale/id"
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     const { setTheme } = useTheme()
-    const [date, setDate] = useState<string>()
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const dateNow = new Date()
-            moment.locale("id")
-            const localDate = moment(dateNow).format("LLLL")
-            setDate(localDate)
-        }, 3000)
-
-        return () => {
-            clearInterval(interval)
-        }
-    })
-
     return (
         <section>
             <header>
@@ -82,7 +66,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </nav>
                 <div className="items-center justify-center col-span-4 gap-6 p-6 text-white border-2 sm:flex md:text-left bg-purples rounded-xl shadow-box dark:shadow-light border-darks2 dark:border-primary">
                     <div className="order-1 md:order-2">
-                        <p>{date}</p>
                         <h1 className="my-3 text-2xl font-bold md:text-4xl">
                             Selamat Datang di Dinas Pendidikan Kota Palangka
                             Raya
