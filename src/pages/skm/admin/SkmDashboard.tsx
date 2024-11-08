@@ -116,7 +116,7 @@ export default function SkmDashboard() {
                     helperText="Jumlah total jawaban yang diterima pada seluruh formulir dalam bulan ini"
                     className="text-left border-2 rounded-lg shadow-box dark:shadow-light border-darks2 dark:border-primary"
                 />
-                <div className="col-span-full grid grid-cols-2 gap-2 w-full">
+                <div className="grid w-full grid-cols-2 gap-2 col-span-full">
                     <NrrStatusTable responsesQuestion={responsesQuestion} />
                     <RespondenByGenderChart />
                 </div>
@@ -188,7 +188,7 @@ export function RespondenByGenderChart() {
     }
 
     return (
-        <div className="border-2 shadow-box dark:shadow-light border-primary rounded-lg">
+        <div className="border-2 rounded-lg shadow-box dark:shadow-light border-primary">
             <div className="flex justify-start">
                 <Button
                     onClick={downloadChartAsPng}
@@ -208,6 +208,7 @@ export function RespondenByGenderChart() {
                 </CardHeader>
                 <CardContent className="flex-1 pb-0">
                     <ChartContainer
+                        style={{ width: "300px", height: "300px" }}
                         config={chartConfig}
                         className="mx-auto aspect-square max-h-[300px]"
                     >
