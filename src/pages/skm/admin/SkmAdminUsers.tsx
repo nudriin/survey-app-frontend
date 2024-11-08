@@ -1,7 +1,7 @@
-import SkmDashboardLayout from "@/components/layout/SkmDashboardLayout"
-import AdminAddUserBtn from "@/components/skm/AdminAddUserBtn"
-import AdminDeleteUserBtn from "@/components/skm/AdminDeleteUserBtn"
-import { UserResponse } from "@/model/UserModel"
+import SkmDashboardLayout from "../../../components/layout/SkmDashboardLayout"
+import AdminAddUserBtn from "../../../components/skm/AdminAddUserBtn"
+import AdminDeleteUserBtn from "../../../components/skm/AdminDeleteUserBtn"
+import { UserResponse } from "../../../model/UserModel"
 import {
     createColumnHelper,
     flexRender,
@@ -12,6 +12,8 @@ import {
 } from "@tanstack/react-table"
 import { useCallback, useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
+import { Button } from "../../../components/ui/button"
+import { TbTrashXFilled } from "react-icons/tb"
 
 const columnHelper = createColumnHelper<UserResponse>()
 
@@ -77,7 +79,16 @@ function UsersTable() {
             header: () => <span>Role</span>,
         }),
         columnHelper.accessor("id", {
-            cell: (info) => <AdminDeleteUserBtn id={info.getValue()} />,
+            cell: (info) => {
+                const role = info.row.original.role
+                return role !== "SUPER_ADMIN" ? (
+                    <AdminDeleteUserBtn id={info.getValue()} />
+                ) : (
+                    <Button disabled>
+                        <TbTrashXFilled />
+                    </Button>
+                )
+            },
             header: () => <span>Aksi</span>,
         }),
     ]
