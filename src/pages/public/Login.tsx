@@ -91,10 +91,10 @@ export default function Login() {
         }
     }
     return (
-        <div className="min-h-screen flex justify-center items-center">
-            <Card className="border-2 border-primary shadow-box dark:shadow-light text-left w-full md:w-1/2 lg:w-1/3 h-full">
+        <div className="flex items-center justify-center min-h-screen">
+            <Card className="w-full h-full text-left border-2 border-primary shadow-box dark:shadow-light md:w-1/2 lg:w-1/3">
                 <CardHeader>
-                    <CardTitle className="text-4xl mt-4">Login</CardTitle>
+                    <CardTitle className="mt-4 text-4xl">Login</CardTitle>
                     <CardDescription>
                         Mohon masukan data anda dengan benar
                     </CardDescription>
@@ -146,7 +146,7 @@ export default function Login() {
                                 )}
                             />
                         </CardContent>
-                        <CardFooter className="felx flex-col gap-4">
+                        <CardFooter className="flex-col gap-4 felx">
                             <ReCAPTCHA
                                 sitekey={import.meta.env.VITE_APP_SITE_KEY}
                                 ref={captchaRef}
@@ -154,7 +154,7 @@ export default function Login() {
                             <Button
                                 onClick={form.handleSubmit(handleFormSubmit)}
                                 disabled={form.formState.isSubmitting}
-                                className="bg-purples w-full font-semibold mb-4 text-white hover:text-background"
+                                className="w-full mb-4 font-semibold text-white bg-purples hover:text-background"
                             >
                                 Login
                             </Button>
