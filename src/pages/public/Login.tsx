@@ -24,6 +24,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
+import ReCAPTCHA from "react-google-recaptcha"
+import { useRef } from "react"
 
 const formSchema = z.object({
     email: z.string().email({ message: "Email tidak valid" }).min(1).max(225),
@@ -49,10 +51,30 @@ export default function Login() {
     const [, setCookie] = useCookies(["auth"])
     const { toast } = useToast()
     const navigate = useNavigate()
+    const captchaRef = useRef<ReCAPTCHA | null>(null)
 
     const handleFormSubmit = async (value: formSchemaType) => {
         console.log(value)
         try {
+            const captchaToken = captchaRef?.current?.getValue()
+            const captchaReponse = await fetch(`/api/v1/users/verify/captcha`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: captchaToken }),
+            })
+
+            const captchaBody = await captchaReponse.json()
+
+            if (!captchaBody.errors && captchaBody.data.success) {
+                console.log("Human 👨 👩")
+            } else {
+                console.log("Robot 🤖")
+                throw new Error("gagal verifikasikan reCaptcha")
+            }
+            captchaRef?.current?.reset()
+
             const response = await fetchLogin(value)
             setCookie("auth", response.token)
             toast({
@@ -124,7 +146,11 @@ export default function Login() {
                                 )}
                             />
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="felx flex-col gap-4">
+                            <ReCAPTCHA
+                                sitekey={import.meta.env.VITE_APP_SITE_KEY}
+                                ref={captchaRef}
+                            />
                             <Button
                                 onClick={form.handleSubmit(handleFormSubmit)}
                                 disabled={form.formState.isSubmitting}

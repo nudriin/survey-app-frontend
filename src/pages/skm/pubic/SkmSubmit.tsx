@@ -118,11 +118,11 @@ function QuestionCard() {
 
             const captchaBody = await captchaReponse.json()
 
-            if (!captchaBody.errors) {
+            if (!captchaBody.errors && captchaBody.data.success) {
                 console.log("Human 👨 👩")
             } else {
                 console.log("Robot 🤖")
-                throw new Error("robot")
+                throw new Error("gagal verifikasikan reCaptcha")
             }
 
             const responseResponden = await fetch("/api/v1/skm/responden", {
@@ -445,7 +445,7 @@ function QuestionCard() {
                 ))}
                 <div className="flex justify-center mt-5">
                     <ReCAPTCHA
-                        sitekey="6LdU7HgqAAAAAFWfTxHSWdhzWXpS_b0VUtHbWiaV"
+                        sitekey={import.meta.env.VITE_APP_SITE_KEY}
                         ref={captchaRef}
                     />
                 </div>
