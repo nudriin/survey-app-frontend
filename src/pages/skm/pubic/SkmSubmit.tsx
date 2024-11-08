@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button"
 import pky from "../../../assets/images/web/pky.png"
 import { HiCursorClick } from "react-icons/hi"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { QuestionResponse, RespondenResponse } from "@/model/SkmModel"
 import Confetti from "react-confetti"
 import Footer from "@/components/Footer"
+import ReCAPTCHA from "react-google-recaptcha"
 
 export default function SkmSubmit() {
     return (
@@ -54,6 +55,7 @@ function QuestionCard() {
     const [submitStatus, setSubmitStatus] = useState<
         "idle" | "success" | "error"
     >("idle")
+    const captchaRef = useRef<ReCAPTCHA | null>(null)
 
     const getAllQuestion = useCallback(async () => {
         try {
@@ -102,9 +104,27 @@ function QuestionCard() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setSubmitStatus("idle")
-
+        const captchaToken = captchaRef?.current?.getValue()
+        captchaRef?.current?.reset()
         try {
             setIsSubmitting(true)
+            const captchaReponse = await fetch(`/api/v1/users/verify/captcha`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: captchaToken }),
+            })
+
+            const captchaBody = await captchaReponse.json()
+
+            if (!captchaBody.errors) {
+                console.log("Human 👨 👩")
+            } else {
+                console.log("Robot 🤖")
+                throw new Error("robot")
+            }
+
             const responseResponden = await fetch("/api/v1/skm/responden", {
                 method: "POST",
                 headers: {
@@ -423,6 +443,12 @@ function QuestionCard() {
                         </div>
                     </div>
                 ))}
+                <div className="flex justify-center mt-5">
+                    <ReCAPTCHA
+                        sitekey="6LdU7HgqAAAAAFWfTxHSWdhzWXpS_b0VUtHbWiaV"
+                        ref={captchaRef}
+                    />
+                </div>
                 <Button
                     className="gap-2 mt-4 bg-purples"
                     disabled={isSubmitting}
