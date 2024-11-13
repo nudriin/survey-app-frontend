@@ -329,13 +329,13 @@ export function ResultTable({
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 No
                             </th>
                             {responsesQuestion.map((value) => (
                                 <th
                                     key={value.id}
-                                    className="p-1 border-2 bg-purples text-white border-primary"
+                                    className="p-1 text-white border-2 bg-purples border-primary"
                                 >
                                     {value.acronim}
                                 </th>
@@ -363,11 +363,11 @@ export function ResultTable({
                             </tr>
                         ))}
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 Total
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {value.responses.reduce(
                                         (total, opt) =>
                                             total + opt.select_option,
@@ -377,11 +377,11 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 NRR/Unsur
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {(
                                         value.responses.reduce(
                                             (total, opt) =>
@@ -393,11 +393,11 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 NRR Tertimbang
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {(
                                         (value.responses.reduce(
                                             (total, opt) =>
@@ -411,12 +411,12 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr className="bg-muted-foreground text-secondary">
-                            <td className="p-1 border-2 border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 border-primary">
                                 IKM Unit Pelayanan
                             </td>
                             <td
                                 colSpan={responsesQuestion.length}
-                                className="p-1 border-2 border-primary font-semibold"
+                                className="p-1 font-semibold border-2 border-primary"
                             >
                                 {(
                                     responsesQuestion.reduce(
@@ -461,16 +461,16 @@ export function NrrStatusTable({
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 No
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 Unsur Pelayanan
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 NRR
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 Keterangan
                             </th>
                         </tr>
@@ -478,16 +478,16 @@ export function NrrStatusTable({
                     <tbody>
                         {responsesQuestion.map((value, index) => (
                             <tr key={index}>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     U{index + 1}
                                 </td>
                                 <td
                                     key={value.id}
-                                    className="p-1 border-2 border-primary px-2 py-1"
+                                    className="p-1 px-2 py-1 border-2 border-primary"
                                 >
                                     {value.acronim}
                                 </td>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     {(
                                         value.responses.reduce(
                                             (total, opt) =>
@@ -496,7 +496,7 @@ export function NrrStatusTable({
                                         ) / value.responses.length
                                     ).toFixed(3)}
                                 </td>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     {(() => {
                                         const a = (
                                             value.responses.reduce(
@@ -537,7 +537,7 @@ export function NrrBarChart({
 }: {
     responsesQuestion: ResponsesWithQuestionResponse[]
 }) {
-    const color = "#5831ee"
+    const color = "#DFA4F8"
     const chartRef = useRef(null)
 
     const chartData = responsesQuestion.map((item, index) => ({
@@ -565,7 +565,7 @@ export function NrrBarChart({
     }
 
     return (
-        <div className="border-2 shadow-box dark:shadow-light border-primary rounded-lg">
+        <div className="border-2 rounded-lg shadow-box dark:shadow-light border-primary">
             <div className="flex justify-start">
                 <Button
                     onClick={downloadChartAsPng}

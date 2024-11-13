@@ -10,7 +10,7 @@ import ReCAPTCHA from "react-google-recaptcha"
 export default function SkmSubmit() {
     return (
         <div className="w-full lg:max-w-[650px] mx-auto">
-            <header className="p-6 text-white border-2 bg-gradient-to-b md:bg-gradient-to-r from-purples to-cyan-500 rounded-xl shadow-box border-darks2 dark:shadow-light dark:border-primary">
+            <header className="p-6 text-white border-2 bg-purples rounded-xl shadow-box border-darks2 dark:shadow-light dark:border-primary">
                 <div className="items-center justify-center col-span-4 gap-3 sm:flex md:text-left ">
                     <div>
                         <p></p>

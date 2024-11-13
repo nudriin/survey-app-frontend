@@ -160,7 +160,7 @@ export function RespondenByGenderChart() {
     }, [getCountRespondenGroupByGender])
 
     const colorPurples = "#5831ee"
-    const colorLime = "#C7FE1E"
+    const colorLime = "#DFA4F8"
     const chartData = countResponden.map((val, index) => {
         return {
             total: val.total,

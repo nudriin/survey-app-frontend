@@ -16,7 +16,7 @@ export default {
                 poppins: 'Poppins, sans-serif',
             },
             colors: {
-                purples: '#5831ee',
+                purples: '#DFA4F8',
                 oranges: '#F86767',
                 greens: '#12BC95',
                 teals: '#47C9D7',
