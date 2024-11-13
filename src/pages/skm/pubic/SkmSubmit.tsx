@@ -47,7 +47,7 @@ function QuestionCard() {
         education: "",
         profession: "",
         service_type: "",
-        gender: "MALE",
+        gender: "",
     })
     const [answers, setAnswers] = useState<{ [key: number]: number }>({})
     const [questions, setQuestions] = useState<QuestionResponse[]>([])
@@ -126,15 +126,15 @@ function QuestionCard() {
         const captchaToken = captchaRef?.current?.getValue()
         captchaRef?.current?.reset()
 
-        if (responden.education === "Lainnya") {
+        if (responden.education === "Lainnya")
             responden.education = customEducation
-            console.log(responden)
-        }
 
-        if (responden.service_type === "Lainnya") {
+        if (responden.service_type === "Lainnya")
             responden.service_type = customService
-            console.log(responden)
-        }
+
+        if (!responden.email) delete responden.email
+        if (!responden.phone) delete responden.phone
+        if (!responden.address) delete responden.address
 
         try {
             setIsSubmitting(true)
@@ -276,7 +276,10 @@ function QuestionCard() {
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                Email
+                                Email{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="email"
@@ -285,13 +288,15 @@ function QuestionCard() {
                                 value={responden.email}
                                 onChange={handleRespondenChange}
                                 className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                                required
                             />
                         </div>
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                No. Telepon
+                                No. Telepon{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="tel"
@@ -300,7 +305,6 @@ function QuestionCard() {
                                 value={responden.phone}
                                 onChange={handleRespondenChange}
                                 className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                                required
                             />
                         </div>
 
@@ -321,7 +325,10 @@ function QuestionCard() {
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                Alamat
+                                Alamat{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="text"
