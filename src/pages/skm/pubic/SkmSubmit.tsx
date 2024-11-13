@@ -6,6 +6,7 @@ import { QuestionResponse, RespondenResponse } from "@/model/SkmModel"
 import Confetti from "react-confetti"
 import Footer from "@/components/Footer"
 import ReCAPTCHA from "react-google-recaptcha"
+import { toast } from "@/hooks/use-toast"
 
 export default function SkmSubmit() {
     return (
@@ -204,6 +205,11 @@ function QuestionCard() {
             }
         } catch (error) {
             setSubmitStatus("error")
+            toast({
+                title: "Error",
+                description: "Mohon periksa kembali data anda",
+                variant: "destructive",
+            })
             console.log(error)
         } finally {
             setIsSubmitting(false)
