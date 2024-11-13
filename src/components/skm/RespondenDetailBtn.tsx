@@ -131,7 +131,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                 title: "Sukses",
                 description: "Jawaban berhasil diubah",
             })
-            navigate(0)
+            if (!isSubmitting) {
+                navigate(0)
+            }
             setSubmitStatus("success")
         } catch (error) {
             setSubmitStatus("error")
@@ -311,6 +313,11 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 </option>
                                                 <option value="S2">S2</option>
                                                 <option value="S3">S3</option>
+                                                <option
+                                                    value={responden.education}
+                                                >
+                                                    {responden.education}
+                                                </option>
                                             </select>
                                         </div>
 
@@ -383,6 +390,13 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                                 <option value="Layanan Data Pokok Pendidikan (DAPODIK)">
                                                     Layanan Data Pokok
                                                     Pendidikan (DAPODIK)
+                                                </option>
+                                                <option
+                                                    value={
+                                                        responden.service_type
+                                                    }
+                                                >
+                                                    {responden.service_type}
                                                 </option>
                                             </select>
                                         </div>
