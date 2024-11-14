@@ -21,12 +21,22 @@ import { Button } from "../ui/button"
 import * as htmlToImage from "html-to-image"
 import { saveAs } from "file-saver"
 import { LuDownload } from "react-icons/lu"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select"
 
 export default function SkmResultStatistics() {
     const [responsesQuestion, setResponsesQuestion] = useState<
         ResponsesWithQuestionResponse[]
     >([])
+    const [responsesQuestionSixMonths, setResponsesQuestionSixMonths] =
+        useState<ResponsesWithQuestionResponse[]>([])
     const [countResponden, setCountResponden] = useState<number>(0)
+    const [selectedRange, setSelectedRange] = useState("six_months")
 
     const getAllResponsesQuestion = useCallback(async () => {
         try {
@@ -41,6 +51,27 @@ export default function SkmResultStatistics() {
 
             if (!body.errors) {
                 setResponsesQuestion(body.data)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    const getAllResponsesQuestionThisSemester = useCallback(async () => {
+        try {
+            const response = await fetch("/api/v1/skm/responses/semester", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            const body = await response.json()
+
+            if (!body.errors) {
+                setResponsesQuestionSixMonths(body.data)
             } else {
                 throw new Error(body.errors)
             }
@@ -71,14 +102,35 @@ export default function SkmResultStatistics() {
     }, [])
 
     useEffect(() => {
-        getAllResponsesQuestion()
+        if (selectedRange === "six_months") {
+            getAllResponsesQuestionThisSemester()
+        } else if (selectedRange === "all_time") {
+            getAllResponsesQuestion()
+        }
         getCountResponden()
-    }, [getAllResponsesQuestion, getCountResponden])
+    }, [
+        getAllResponsesQuestion,
+        getCountResponden,
+        getAllResponsesQuestionThisSemester,
+        selectedRange,
+    ])
 
-    const quisionerTotal = responsesQuestion.length
+    const handleRangeChange = (event: string) => {
+        setSelectedRange(event)
+        console.log(event)
+    }
+
+    let displayedData: ResponsesWithQuestionResponse[] = []
+    if (selectedRange === "six_months") {
+        displayedData = responsesQuestionSixMonths
+    } else if (selectedRange === "all_time") {
+        displayedData = responsesQuestion
+    }
+
+    const quisionerTotal = displayedData.length
     const unitIKM = Number(
         (
-            responsesQuestion.reduce((grandTotal, value) => {
+            displayedData.reduce((grandTotal, value) => {
                 const ikmValue =
                     (value.responses.reduce(
                         (total, opt) => total + (opt.select_option ?? 4),
@@ -270,11 +322,28 @@ export default function SkmResultStatistics() {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end">
+            <div className="flex items-center space-x-4"></div>
+            <div className="flex justify-between">
+                <div>
+                    <Select
+                        defaultValue={selectedRange}
+                        onValueChange={handleRangeChange}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Rentang Hasil Survei" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="six_months">
+                                6 Bulan Terakhir
+                            </SelectItem>
+                            <SelectItem value="all_time">Semua</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
                 <Button
                     onClick={() =>
                         exportAllToExcel(
-                            responsesQuestion,
+                            displayedData,
                             quisionerTotal,
                             countResponden,
                             unitIKM
@@ -305,10 +374,10 @@ export default function SkmResultStatistics() {
                 />
             </div>
             <div className="grid grid-cols-2 gap-2">
-                <NrrStatusTable responsesQuestion={responsesQuestion} />
-                <NrrBarChart responsesQuestion={responsesQuestion} />
+                <NrrStatusTable responsesQuestion={displayedData} />
+                <NrrBarChart responsesQuestion={displayedData} />
             </div>
-            <ResultTable responsesQuestion={responsesQuestion} />
+            <ResultTable responsesQuestion={displayedData} />
         </div>
     )
 }
