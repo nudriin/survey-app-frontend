@@ -8,6 +8,7 @@ import { HiCursorClick } from "react-icons/hi"
 import { useCookies } from "react-cookie"
 import { toast } from "@/hooks/use-toast"
 import { useNavigate } from "react-router-dom"
+import { Textarea } from "../ui/textarea"
 export default function RespondenDetailBtn({ id }: { id: number }) {
     const [responden, setResponden] = useState<RespondenResponse>({
         id: 0,
@@ -19,6 +20,7 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
         education: "",
         profession: "",
         service_type: "",
+        suggestions: "",
         gender: "MALE",
     })
     const [answers, setAnswers] = useState<{ [key: number]: number }>({})
@@ -79,7 +81,9 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
     }, [getAllResponsesById, getRespondenById])
 
     const handleRespondenChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
     ) => {
         const { name, value } = e.target
         setResponden((prev: any) => ({
@@ -105,6 +109,27 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
 
         try {
             setIsSubmitting(true)
+            const responseResponden = await fetch("/api/v1/skm/responden", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    id: responden.id,
+                    suggestions: responden.suggestions,
+                }),
+            })
+
+            const bodyResponden = await responseResponden.json()
+
+            if (!bodyResponden.errors) {
+                setResponden(bodyResponden.data)
+            } else {
+                setSubmitStatus("error")
+                throw new Error(bodyResponden.errors)
+            }
+
             for (const [responseId, optionNumber] of Object.entries(answers)) {
                 const formattedAnswer = {
                     id: parseInt(responseId),
@@ -449,6 +474,19 @@ export default function RespondenDetailBtn({ id }: { id: number }) {
                                         </div>
                                     </div>
                                 ))}
+                                <div className="p-6 mt-2 text-left border-2 border-primary rounded-xl shadow-box dark:shadow-light bg-background">
+                                    <h1 className="mb-4 text-lg font-semibold">
+                                        Kritik dan Saran
+                                    </h1>
+                                    <Textarea
+                                        name="suggestions"
+                                        onChange={handleRespondenChange}
+                                        defaultValue={responden.suggestions}
+                                        rows={1}
+                                        className="border border-primary"
+                                        placeholder="Kritik dan saran"
+                                    />
+                                </div>
                                 <div className="flex justify-center">
                                     <Button
                                         className="gap-2 mt-4 bg-purples"
