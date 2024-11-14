@@ -21,12 +21,22 @@ import { Button } from "../ui/button"
 import * as htmlToImage from "html-to-image"
 import { saveAs } from "file-saver"
 import { LuDownload } from "react-icons/lu"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select"
 
 export default function SkmResultStatistics() {
     const [responsesQuestion, setResponsesQuestion] = useState<
         ResponsesWithQuestionResponse[]
     >([])
+    const [responsesQuestionSixMonths, setResponsesQuestionSixMonths] =
+        useState<ResponsesWithQuestionResponse[]>([])
     const [countResponden, setCountResponden] = useState<number>(0)
+    const [selectedRange, setSelectedRange] = useState("six_months")
 
     const getAllResponsesQuestion = useCallback(async () => {
         try {
@@ -41,6 +51,27 @@ export default function SkmResultStatistics() {
 
             if (!body.errors) {
                 setResponsesQuestion(body.data)
+            } else {
+                throw new Error(body.errors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    const getAllResponsesQuestionThisSemester = useCallback(async () => {
+        try {
+            const response = await fetch("/api/v1/skm/responses/semester", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            const body = await response.json()
+
+            if (!body.errors) {
+                setResponsesQuestionSixMonths(body.data)
             } else {
                 throw new Error(body.errors)
             }
@@ -71,14 +102,35 @@ export default function SkmResultStatistics() {
     }, [])
 
     useEffect(() => {
-        getAllResponsesQuestion()
+        if (selectedRange === "six_months") {
+            getAllResponsesQuestionThisSemester()
+        } else if (selectedRange === "all_time") {
+            getAllResponsesQuestion()
+        }
         getCountResponden()
-    }, [getAllResponsesQuestion, getCountResponden])
+    }, [
+        getAllResponsesQuestion,
+        getCountResponden,
+        getAllResponsesQuestionThisSemester,
+        selectedRange,
+    ])
 
-    const quisionerTotal = responsesQuestion.length
+    const handleRangeChange = (event: string) => {
+        setSelectedRange(event)
+        console.log(event)
+    }
+
+    let displayedData: ResponsesWithQuestionResponse[] = []
+    if (selectedRange === "six_months") {
+        displayedData = responsesQuestionSixMonths
+    } else if (selectedRange === "all_time") {
+        displayedData = responsesQuestion
+    }
+
+    const quisionerTotal = displayedData.length
     const unitIKM = Number(
         (
-            responsesQuestion.reduce((grandTotal, value) => {
+            displayedData.reduce((grandTotal, value) => {
                 const ikmValue =
                     (value.responses.reduce(
                         (total, opt) => total + (opt.select_option ?? 4),
@@ -270,11 +322,28 @@ export default function SkmResultStatistics() {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end">
+            <div className="flex items-center space-x-4"></div>
+            <div className="flex justify-between">
+                <div>
+                    <Select
+                        defaultValue={selectedRange}
+                        onValueChange={handleRangeChange}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Rentang Hasil Survei" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="six_months">
+                                6 Bulan Terakhir
+                            </SelectItem>
+                            <SelectItem value="all_time">Semua</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
                 <Button
                     onClick={() =>
                         exportAllToExcel(
-                            responsesQuestion,
+                            displayedData,
                             quisionerTotal,
                             countResponden,
                             unitIKM
@@ -305,10 +374,10 @@ export default function SkmResultStatistics() {
                 />
             </div>
             <div className="grid grid-cols-2 gap-2">
-                <NrrStatusTable responsesQuestion={responsesQuestion} />
-                <NrrBarChart responsesQuestion={responsesQuestion} />
+                <NrrStatusTable responsesQuestion={displayedData} />
+                <NrrBarChart responsesQuestion={displayedData} />
             </div>
-            <ResultTable responsesQuestion={responsesQuestion} />
+            <ResultTable responsesQuestion={displayedData} />
         </div>
     )
 }
@@ -329,13 +398,13 @@ export function ResultTable({
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 No
                             </th>
                             {responsesQuestion.map((value) => (
                                 <th
                                     key={value.id}
-                                    className="p-1 border-2 bg-purples text-white border-primary"
+                                    className="p-1 text-white border-2 bg-purples border-primary"
                                 >
                                     {value.acronim}
                                 </th>
@@ -363,11 +432,11 @@ export function ResultTable({
                             </tr>
                         ))}
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 Total
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {value.responses.reduce(
                                         (total, opt) =>
                                             total + opt.select_option,
@@ -377,11 +446,11 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 NRR/Unsur
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {(
                                         value.responses.reduce(
                                             (total, opt) =>
@@ -393,11 +462,11 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr>
-                            <td className="p-1 border-2 rounded-lg border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 rounded-lg border-primary">
                                 NRR Tertimbang
                             </td>
                             {responsesQuestion.map((value) => (
-                                <td className="p-1 border-2 rounded-lg border-primary font-semibold">
+                                <td className="p-1 font-semibold border-2 rounded-lg border-primary">
                                     {(
                                         (value.responses.reduce(
                                             (total, opt) =>
@@ -411,12 +480,12 @@ export function ResultTable({
                             ))}
                         </tr>
                         <tr className="bg-muted-foreground text-secondary">
-                            <td className="p-1 border-2 border-primary font-semibold text-left">
+                            <td className="p-1 font-semibold text-left border-2 border-primary">
                                 IKM Unit Pelayanan
                             </td>
                             <td
                                 colSpan={responsesQuestion.length}
-                                className="p-1 border-2 border-primary font-semibold"
+                                className="p-1 font-semibold border-2 border-primary"
                             >
                                 {(
                                     responsesQuestion.reduce(
@@ -461,16 +530,16 @@ export function NrrStatusTable({
                 <table className="w-full">
                     <thead>
                         <tr>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 No
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 Unsur Pelayanan
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 NRR
                             </th>
-                            <th className="p-1 border-2 bg-purples text-white border-primary">
+                            <th className="p-1 text-white border-2 bg-purples border-primary">
                                 Keterangan
                             </th>
                         </tr>
@@ -478,16 +547,16 @@ export function NrrStatusTable({
                     <tbody>
                         {responsesQuestion.map((value, index) => (
                             <tr key={index}>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     U{index + 1}
                                 </td>
                                 <td
                                     key={value.id}
-                                    className="p-1 border-2 border-primary px-2 py-1"
+                                    className="p-1 px-2 py-1 border-2 border-primary"
                                 >
                                     {value.acronim}
                                 </td>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     {(
                                         value.responses.reduce(
                                             (total, opt) =>
@@ -496,7 +565,7 @@ export function NrrStatusTable({
                                         ) / value.responses.length
                                     ).toFixed(3)}
                                 </td>
-                                <td className="p-1 border-2 border-primary px-2 py-1">
+                                <td className="p-1 px-2 py-1 border-2 border-primary">
                                     {(() => {
                                         const a = (
                                             value.responses.reduce(
@@ -537,7 +606,7 @@ export function NrrBarChart({
 }: {
     responsesQuestion: ResponsesWithQuestionResponse[]
 }) {
-    const color = "#5831ee"
+    const color = "#DFA4F8"
     const chartRef = useRef(null)
 
     const chartData = responsesQuestion.map((item, index) => ({
@@ -565,7 +634,7 @@ export function NrrBarChart({
     }
 
     return (
-        <div className="border-2 shadow-box dark:shadow-light border-primary rounded-lg">
+        <div className="border-2 rounded-lg shadow-box dark:shadow-light border-primary">
             <div className="flex justify-start">
                 <Button
                     onClick={downloadChartAsPng}

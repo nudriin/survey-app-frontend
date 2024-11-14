@@ -6,11 +6,13 @@ import { QuestionResponse, RespondenResponse } from "@/model/SkmModel"
 import Confetti from "react-confetti"
 import Footer from "@/components/Footer"
 import ReCAPTCHA from "react-google-recaptcha"
+import { toast } from "@/hooks/use-toast"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function SkmSubmit() {
     return (
         <div className="w-full lg:max-w-[650px] mx-auto">
-            <header className="p-6 text-white border-2 bg-gradient-to-b md:bg-gradient-to-r from-purples to-cyan-500 rounded-xl shadow-box border-darks2 dark:shadow-light dark:border-primary">
+            <header className="p-6 text-white border-2 bg-purples rounded-xl shadow-box border-darks2 dark:shadow-light dark:border-primary">
                 <div className="items-center justify-center col-span-4 gap-3 sm:flex md:text-left ">
                     <div>
                         <p></p>
@@ -47,7 +49,8 @@ function QuestionCard() {
         education: "",
         profession: "",
         service_type: "",
-        gender: "MALE",
+        suggestions: "",
+        gender: "",
     })
     const [answers, setAnswers] = useState<{ [key: number]: number }>({})
     const [questions, setQuestions] = useState<QuestionResponse[]>([])
@@ -56,6 +59,9 @@ function QuestionCard() {
         "idle" | "success" | "error"
     >("idle")
     const captchaRef = useRef<ReCAPTCHA | null>(null)
+
+    const [customEducation, setCustomEducation] = useState<string>("")
+    const [customService, setCustomService] = useState<string>("")
 
     const getAllQuestion = useCallback(async () => {
         try {
@@ -83,7 +89,9 @@ function QuestionCard() {
     }, [getAllQuestion])
 
     const handleRespondenChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
     ) => {
         const { name, value } = e.target
         setResponden((prev) => ({
@@ -92,6 +100,22 @@ function QuestionCard() {
         }))
 
         console.log(responden)
+    }
+
+    const handleCustomEducationChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { value } = e.target
+        setCustomEducation(value)
+        console.log(customEducation)
+    }
+
+    const handleCustomServiceChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { value } = e.target
+        setCustomService(value)
+        console.log(customService)
     }
 
     const handleOptionChange = (questionId: number, optionNumber: number) => {
@@ -106,6 +130,17 @@ function QuestionCard() {
         setSubmitStatus("idle")
         const captchaToken = captchaRef?.current?.getValue()
         captchaRef?.current?.reset()
+
+        if (responden.education === "Lainnya")
+            responden.education = customEducation
+
+        if (responden.service_type === "Lainnya")
+            responden.service_type = customService
+
+        if (!responden.email) delete responden.email
+        if (!responden.phone) delete responden.phone
+        if (!responden.address) delete responden.address
+
         try {
             setIsSubmitting(true)
             const captchaReponse = await fetch(`/api/v1/users/verify/captcha`, {
@@ -174,6 +209,11 @@ function QuestionCard() {
             }
         } catch (error) {
             setSubmitStatus("error")
+            toast({
+                title: "Error",
+                description: "Mohon periksa kembali data anda",
+                variant: "destructive",
+            })
             console.log(error)
         } finally {
             setIsSubmitting(false)
@@ -246,7 +286,10 @@ function QuestionCard() {
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                Email
+                                Email{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="email"
@@ -255,13 +298,15 @@ function QuestionCard() {
                                 value={responden.email}
                                 onChange={handleRespondenChange}
                                 className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                                required
                             />
                         </div>
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                No. Telepon
+                                No. Telepon{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="tel"
@@ -270,7 +315,6 @@ function QuestionCard() {
                                 value={responden.phone}
                                 onChange={handleRespondenChange}
                                 className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                                required
                             />
                         </div>
 
@@ -291,7 +335,10 @@ function QuestionCard() {
 
                         <div>
                             <label className="block mb-1 text-sm font-medium">
-                                Alamat
+                                Alamat{" "}
+                                <span className="text-muted-foreground">
+                                    (Opsional)
+                                </span>
                             </label>
                             <input
                                 type="text"
@@ -318,26 +365,45 @@ function QuestionCard() {
                         </div>
 
                         <div>
-                            <label className="block mb-1 text-sm font-medium">
-                                Pendidikan
-                            </label>
-                            <select
-                                name="education"
-                                value={responden.education}
-                                onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                            >
-                                <option selected hidden>
-                                    Pilih Pendidikan
-                                </option>
-                                <option value="SD">SD</option>
-                                <option value="SMP">SMP</option>
-                                <option value="SMA">SMA</option>
-                                <option value="D1/D2/D3">D1/D2/D3</option>
-                                <option value="D4/S1">D4/S1</option>
-                                <option value="S2">S2</option>
-                                <option value="S3">S3</option>
-                            </select>
+                            <div>
+                                <label className="block mb-1 text-sm font-medium">
+                                    Pendidikan
+                                </label>
+                                <select
+                                    name="education"
+                                    value={responden.education}
+                                    onChange={handleRespondenChange}
+                                    className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                >
+                                    <option selected hidden>
+                                        Pilih Pendidikan
+                                    </option>
+                                    <option value="SD">SD</option>
+                                    <option value="SMP">SMP</option>
+                                    <option value="SMA">SMA</option>
+                                    <option value="D1/D2/D3">D1/D2/D3</option>
+                                    <option value="D4/S1">D4/S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            {responden.education === "Lainnya" && (
+                                <div>
+                                    <label className="block mb-1 text-sm font-medium">
+                                        Pendidikan Lainnya
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="customEducation"
+                                        value={customEducation}
+                                        onChange={handleCustomEducationChange}
+                                        placeholder="Masukkan pendidikan Anda"
+                                        className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                        required
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div>
@@ -359,41 +425,62 @@ function QuestionCard() {
                         </div>
 
                         <div className="md:col-span-2">
-                            <label className="block mb-1 text-sm font-medium">
-                                Pilih Jenis Layanan yang Bapak/Ibu terima!
-                            </label>
-                            <select
-                                name="service_type"
-                                value={responden.service_type}
-                                onChange={handleRespondenChange}
-                                className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
-                            >
-                                <option selected hidden>
-                                    Pilih Jenis Layanan
-                                </option>
-                                <option value="Legalisasi">Legalisasi</option>
-                                <option value="Surat Keterangan Pengganti Ijazah/STTB">
-                                    Surat Keterangan Pengganti Ijazah/STTB
-                                </option>
-                                <option value="Layanan Kepegawaian">
-                                    Layanan Kepegawaian
-                                </option>
-                                <option value="Izin Operasional Pendirian Sekolah">
-                                    Izin Operasional Pendirian Sekolah
-                                </option>
-                                <option value="Layanan Pendidikan Non Formal (PNF)">
-                                    Layanan Pendidikan Non Formal (PNF)
-                                </option>
-                                <option value="Layanan Intervensi Terpadu">
-                                    Layanan Intervensi Terpadu
-                                </option>
-                                <option value="Layanan Mutasi Siswa">
-                                    Layanan Mutasi Siswa
-                                </option>
-                                <option value="Layanan Data Pokok Pendidikan (DAPODIK)">
-                                    Layanan Data Pokok Pendidikan (DAPODIK)
-                                </option>
-                            </select>
+                            <div>
+                                <label className="block mb-1 text-sm font-medium">
+                                    Pilih Jenis Layanan yang Bapak/Ibu terima!
+                                </label>
+                                <select
+                                    name="service_type"
+                                    value={responden.service_type}
+                                    onChange={handleRespondenChange}
+                                    className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                >
+                                    <option selected hidden>
+                                        Pilih Jenis Layanan
+                                    </option>
+                                    <option value="Legalisasi">
+                                        Legalisasi
+                                    </option>
+                                    <option value="Surat Keterangan Pengganti Ijazah/STTB">
+                                        Surat Keterangan Pengganti Ijazah/STTB
+                                    </option>
+                                    <option value="Layanan Kepegawaian">
+                                        Layanan Kepegawaian
+                                    </option>
+                                    <option value="Izin Operasional Pendirian Sekolah">
+                                        Izin Operasional Pendirian Sekolah
+                                    </option>
+                                    <option value="Layanan Pendidikan Non Formal (PNF)">
+                                        Layanan Pendidikan Non Formal (PNF)
+                                    </option>
+                                    <option value="Layanan Intervensi Terpadu">
+                                        Layanan Intervensi Terpadu
+                                    </option>
+                                    <option value="Layanan Mutasi Siswa">
+                                        Layanan Mutasi Siswa
+                                    </option>
+                                    <option value="Layanan Data Pokok Pendidikan (DAPODIK)">
+                                        Layanan Data Pokok Pendidikan (DAPODIK)
+                                    </option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            {responden.service_type === "Lainnya" && (
+                                <div>
+                                    <label className="block mb-1 text-sm font-medium">
+                                        Jenis Layanan Lainnya
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="customService"
+                                        value={customService}
+                                        onChange={handleCustomServiceChange}
+                                        placeholder="Masukkan Jenis Layanan Anda terima"
+                                        className="w-full px-3 py-2 border-2 rounded-md border-primary bg-background"
+                                        required
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -443,6 +530,18 @@ function QuestionCard() {
                         </div>
                     </div>
                 ))}
+                <div className="p-6 mt-2 text-left border-2 border-primary rounded-xl shadow-box dark:shadow-light bg-background">
+                    <h1 className="mb-4 text-lg font-semibold">
+                        Kritik dan Saran
+                    </h1>
+                    <Textarea
+                        name="suggestions"
+                        onChange={handleRespondenChange}
+                        rows={1}
+                        className="border border-primary"
+                        placeholder="Kritik dan saran"
+                    />
+                </div>
                 <div className="flex justify-center mt-5">
                     <ReCAPTCHA
                         sitekey={import.meta.env.VITE_APP_SITE_KEY}

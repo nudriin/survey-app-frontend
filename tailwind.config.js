@@ -9,14 +9,14 @@ export default {
     theme: {
         extend: {
             backgroundImage: {
-                'disdik-img': "url('/bg.png')"
+                'disdik-img': "url('/bg-disdik-color.jpg')"
             },
             fontFamily: {
                 lato: 'Lato, sans-serif',
                 poppins: 'Poppins, sans-serif',
             },
             colors: {
-                purples: '#5831ee',
+                purples: '#DFA4F8',
                 oranges: '#F86767',
                 greens: '#12BC95',
                 teals: '#47C9D7',
