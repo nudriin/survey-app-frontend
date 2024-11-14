@@ -19,6 +19,7 @@ export interface RespondenResponse {
     education: string
     profession: string
     service_type: string
+    suggestions?: string
     gender: string
 }
 

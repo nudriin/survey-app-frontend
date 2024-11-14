@@ -7,6 +7,7 @@ import Confetti from "react-confetti"
 import Footer from "@/components/Footer"
 import ReCAPTCHA from "react-google-recaptcha"
 import { toast } from "@/hooks/use-toast"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function SkmSubmit() {
     return (
@@ -48,6 +49,7 @@ function QuestionCard() {
         education: "",
         profession: "",
         service_type: "",
+        suggestions: "",
         gender: "",
     })
     const [answers, setAnswers] = useState<{ [key: number]: number }>({})
@@ -87,7 +89,9 @@ function QuestionCard() {
     }, [getAllQuestion])
 
     const handleRespondenChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
     ) => {
         const { name, value } = e.target
         setResponden((prev) => ({
@@ -526,6 +530,18 @@ function QuestionCard() {
                         </div>
                     </div>
                 ))}
+                <div className="p-6 mt-2 text-left border-2 border-primary rounded-xl shadow-box dark:shadow-light bg-background">
+                    <h1 className="mb-4 text-lg font-semibold">
+                        Kritik dan Saran
+                    </h1>
+                    <Textarea
+                        name="suggestions"
+                        onChange={handleRespondenChange}
+                        rows={1}
+                        className="border border-primary"
+                        placeholder="Kritik dan saran"
+                    />
+                </div>
                 <div className="flex justify-center mt-5">
                     <ReCAPTCHA
                         sitekey={import.meta.env.VITE_APP_SITE_KEY}
