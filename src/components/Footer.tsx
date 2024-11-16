@@ -7,7 +7,7 @@ export default function Footer() {
                 <li className="text-secondary">
                     &copy; Dinas Pendidikan Kota Palangka Raya 2024
                 </li>
-                <li className="text-sm text-muted/20">
+                <li className="text-sm text-zinc-900">
                     Developed by{" "}
                     <Link
                         target="_blank"
