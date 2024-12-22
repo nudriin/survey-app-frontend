@@ -4,9 +4,6 @@ import { useCallback, useEffect, useState } from "react"
 import {
     useReactTable,
     getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
     flexRender,
     createColumnHelper,
     SortingState,
@@ -14,7 +11,6 @@ import {
 import { useCookies } from "react-cookie"
 import RespondenDeleteBtn from "@/components/skm/RespondenDeleteBtn"
 import RespondenDetailBtn from "@/components/skm/RespondenDetailBtn"
-import { Button } from "@/components/ui/button"
 
 const columnHelper = createColumnHelper<RespondenResponse>()
 
@@ -28,42 +24,51 @@ export default function SkmResponden() {
 
 function RespondenTable() {
     const [respondens, setRespondens] = useState<RespondenResponse[]>([])
+    const [totalData, setTotalData] = useState(0) // Total data dari backend
     const [globalFilter, setGlobalFilter] = useState("")
     const [sorting, setSorting] = useState<SortingState>([])
     const [cookie] = useCookies(["auth"])
     const token = cookie.auth
 
-    const getAllResponden = useCallback(async () => {
+    const [currentPage, setCurrentPage] = useState(0) // Halaman saat ini dimulai dari 0
+    const pageSize = 10 // Jumlah data per halaman
+
+    const fetchData = useCallback(async () => {
         try {
-            const response = await fetch("/api/v1/skm/responden", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            })
+            const response = await fetch(
+                `/api/v1/skm/responden?page=${
+                    currentPage + 1
+                }&pageSize=${pageSize}&search=${globalFilter}`, // Tambahkan search di sini
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
 
             const body = await response.json()
 
             if (!body.errors) {
-                setRespondens(body.data)
+                setRespondens(body.data.data) // Data responden
+                setTotalData(body.data.total) // Total data dari backend
             } else {
                 throw new Error(body.errors)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
-    }, [token])
+    }, [currentPage, pageSize, globalFilter, token]) // Pastikan `globalFilter` ada dalam dependency array
 
     useEffect(() => {
-        getAllResponden()
-    }, [getAllResponden])
+        fetchData()
+    }, [fetchData])
 
     const columns = [
         columnHelper.accessor("name", {
             cell: (info) => <span className="">{info.getValue()}</span>,
             header: () => <span>Nama</span>,
-            enableSorting: true,
         }),
         columnHelper.accessor("phone", {
             cell: (info) => <span className="">{info.getValue()}</span>,
@@ -102,18 +107,24 @@ function RespondenTable() {
         state: {
             globalFilter,
             sorting,
+            pagination: {
+                pageIndex: currentPage,
+                pageSize,
+            },
         },
         onGlobalFilterChange: setGlobalFilter,
         onSortingChange: setSorting,
-        getCoreRowModel: getCoreRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        initialState: {
-            pagination: {
-                pageSize: 10,
-            },
+        onPaginationChange: (updater) => {
+            const newPagination =
+                typeof updater === "function"
+                    ? updater({ pageIndex: currentPage, pageSize })
+                    : updater
+
+            setCurrentPage(newPagination.pageIndex)
         },
+        manualPagination: true, // Aktifkan pagination manual (server-side)
+        pageCount: Math.ceil(totalData / pageSize), // Total halaman dari backend
+        getCoreRowModel: getCoreRowModel(),
     })
 
     return (
@@ -126,20 +137,10 @@ function RespondenTable() {
                     <input
                         type="text"
                         value={globalFilter ?? ""}
-                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        onChange={(e) => setGlobalFilter(e.target.value)} // Update nilai pencarian
                         placeholder="Cari responden..."
                         className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ring-1 ring-muted-foreground"
                     />
-                    <Button
-                        variant={"secondary"}
-                        onClick={() => table.getColumn("name")?.toggleSorting()}
-                        className="px-4 py-2 rounded-md shadow-sm ring-1 ring-muted-foreground"
-                    >
-                        {table.getColumn("name")?.getIsSorted() === "asc"
-                            ? "↑"
-                            : "↓ "}{" "}
-                        Urutkan
-                    </Button>
                 </div>
             </div>
             <div className="overflow-x-auto text-left">
@@ -152,28 +153,9 @@ function RespondenTable() {
                                         key={header.id}
                                         className="p-1 border-2 border-primary"
                                     >
-                                        {header.column.getCanSort() ? (
-                                            <div
-                                                className="cursor-pointer select-none"
-                                                onClick={header.column.getToggleSortingHandler()}
-                                            >
-                                                {flexRender(
-                                                    header.column.columnDef
-                                                        .header,
-                                                    header.getContext()
-                                                )}
-                                                {{
-                                                    asc: " ↑",
-                                                    desc: " ↓",
-                                                }[
-                                                    header.column.getIsSorted() as string
-                                                ] ?? null}
-                                            </div>
-                                        ) : (
-                                            flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
                                         )}
                                     </th>
                                 ))}
@@ -204,19 +186,30 @@ function RespondenTable() {
                 <div className="flex items-center justify-between mt-4">
                     <button
                         className="px-4 py-2 rounded-md text-secondary bg-primary disabled:opacity-50"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.max(prev - 1, 0))
+                        }
+                        disabled={currentPage === 0}
                     >
                         Previous
                     </button>
                     <span>
-                        Page {table.getState().pagination.pageIndex + 1} of{" "}
-                        {table.getPageCount()}
+                        Page {currentPage + 1} of{" "}
+                        {Math.ceil(totalData / pageSize)}
                     </span>
                     <button
                         className="px-4 py-2 rounded-md text-secondary bg-primary disabled:opacity-50"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        onClick={() =>
+                            setCurrentPage((prev) =>
+                                Math.min(
+                                    prev + 1,
+                                    Math.ceil(totalData / pageSize) - 1
+                                )
+                            )
+                        }
+                        disabled={
+                            currentPage >= Math.ceil(totalData / pageSize) - 1
+                        }
                     >
                         Next
                     </button>

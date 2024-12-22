@@ -502,6 +502,9 @@ export function ResultTable({
                                 {(
                                     responsesQuestion.reduce(
                                         (grandTotal, value) => {
+                                            if (value.responses.length === 0) {
+                                                return grandTotal
+                                            }
                                             const ikmValue =
                                                 (value.responses.reduce(
                                                     (total, opt) =>
@@ -569,13 +572,15 @@ export function NrrStatusTable({
                                     {value.acronim}
                                 </td>
                                 <td className="p-1 px-2 py-1 border-2 border-primary">
-                                    {(
-                                        value.responses.reduce(
-                                            (total, opt) =>
-                                                total + opt.select_option,
-                                            0
-                                        ) / value.responses.length
-                                    ).toFixed(3)}
+                                    {value.responses.length > 0
+                                        ? (
+                                              value.responses.reduce(
+                                                  (total, opt) =>
+                                                      total + opt.select_option,
+                                                  0
+                                              ) / value.responses.length
+                                          ).toFixed(3)
+                                        : "0.000"}
                                 </td>
                                 <td className="p-1 px-2 py-1 border-2 border-primary">
                                     {(() => {
@@ -623,12 +628,15 @@ export function NrrBarChart({
 
     const chartData = responsesQuestion.map((item, index) => ({
         label: `U${index + 1}`, // Label sesuai index + 1
-        value: (
-            item.responses.reduce(
-                (total, opt) => total + opt.select_option,
-                0
-            ) / item.responses.length
-        ).toFixed(3), // Nilai rata-rata
+        value:
+            item.responses.length > 0
+                ? (
+                      item.responses.reduce(
+                          (total, opt) => total + opt.select_option,
+                          0
+                      ) / item.responses.length
+                  ).toFixed(3)
+                : "0.000",
     }))
 
     const chartConfig = {
