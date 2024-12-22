@@ -131,9 +131,12 @@ export default function SkmResultStatistics() {
     const unitIKM = Number(
         (
             displayedData.reduce((grandTotal, value) => {
+                if (value.responses.length === 0) {
+                    return grandTotal
+                }
                 const ikmValue =
                     (value.responses.reduce(
-                        (total, opt) => total + (opt.select_option ?? 4),
+                        (total, opt) => total + (opt.select_option ?? 0),
                         0
                     ) /
                         value.responses.length) *
@@ -426,7 +429,7 @@ export function ResultTable({
                                         className="p-1 border-2 rounded-lg border-primary"
                                     >
                                         {question?.responses[index]
-                                            ?.select_option ?? 4}
+                                            ?.select_option ?? 0}
                                     </td>
                                 ))}
                             </tr>
@@ -437,11 +440,13 @@ export function ResultTable({
                             </td>
                             {responsesQuestion.map((value) => (
                                 <td className="p-1 font-semibold border-2 rounded-lg border-primary">
-                                    {value.responses.reduce(
-                                        (total, opt) =>
-                                            total + opt.select_option,
-                                        0
-                                    )}
+                                    {value.responses.length > 0
+                                        ? value.responses.reduce(
+                                              (total, opt) =>
+                                                  total + opt.select_option,
+                                              0
+                                          )
+                                        : 0}
                                 </td>
                             ))}
                         </tr>
@@ -451,13 +456,15 @@ export function ResultTable({
                             </td>
                             {responsesQuestion.map((value) => (
                                 <td className="p-1 font-semibold border-2 rounded-lg border-primary">
-                                    {(
-                                        value.responses.reduce(
-                                            (total, opt) =>
-                                                total + opt.select_option,
-                                            0
-                                        ) / value.responses.length
-                                    ).toFixed(3)}
+                                    {value.responses.length > 0
+                                        ? (
+                                              value.responses.reduce(
+                                                  (total, opt) =>
+                                                      total + opt.select_option,
+                                                  0
+                                              ) / value.responses.length
+                                          ).toFixed(3)
+                                        : "0.000"}
                                 </td>
                             ))}
                         </tr>
@@ -467,15 +474,20 @@ export function ResultTable({
                             </td>
                             {responsesQuestion.map((value) => (
                                 <td className="p-1 font-semibold border-2 rounded-lg border-primary">
-                                    {(
-                                        (value.responses.reduce(
-                                            (total, opt) =>
-                                                total + opt.select_option,
-                                            0
-                                        ) /
-                                            value.responses.length) *
-                                        0.111
-                                    ).toFixed(3)}
+                                    {
+                                        value.responses.length > 0
+                                            ? (
+                                                  (value.responses.reduce(
+                                                      (total, opt) =>
+                                                          total +
+                                                          opt.select_option,
+                                                      0
+                                                  ) /
+                                                      value.responses.length) *
+                                                  0.111
+                                              ).toFixed(3)
+                                            : "0.000" /* atau "-" */
+                                    }
                                 </td>
                             ))}
                         </tr>

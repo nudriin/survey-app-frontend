@@ -83,6 +83,9 @@ export default function SkmDashboard() {
     const unitIKM = Number(
         (
             responsesQuestion.reduce((grandTotal, value) => {
+                if (value.responses.length === 0) {
+                    return grandTotal
+                }
                 const ikmValue =
                     (value.responses.reduce(
                         (total, opt) => total + opt.select_option,
