@@ -148,6 +148,9 @@ function RespondenTable() {
                     <thead className="text-white bg-purples">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
+                                <th className="p-1 border-2 border-primary">
+                                    No
+                                </th>
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
@@ -163,11 +166,14 @@ function RespondenTable() {
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map((row) => (
+                        {table.getRowModel().rows.map((row, index) => (
                             <tr
                                 key={row.id}
                                 className="border-2 border-primary"
                             >
+                                <td className="p-1 border-2 border-primary">
+                                    {index + 1}
+                                </td>
                                 {row.getVisibleCells().map((cell) => (
                                     <td
                                         key={cell.id}
