@@ -7,6 +7,7 @@ import {
     flexRender,
     createColumnHelper,
     SortingState,
+    getSortedRowModel,
 } from "@tanstack/react-table"
 import { useCookies } from "react-cookie"
 import RespondenDeleteBtn from "@/components/skm/RespondenDeleteBtn"
@@ -27,6 +28,7 @@ function RespondenTable() {
     const [totalData, setTotalData] = useState(0) // Total data dari backend
     const [globalFilter, setGlobalFilter] = useState("")
     const [sorting, setSorting] = useState<SortingState>([])
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const [cookie] = useCookies(["auth"])
     const token = cookie.auth
 
@@ -68,7 +70,22 @@ function RespondenTable() {
     const columns = [
         columnHelper.accessor("name", {
             cell: (info) => <span className="">{info.getValue()}</span>,
-            header: () => <span>Nama</span>,
+            header: ({ column }) => (
+                <div
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Nama
+                    {column.getIsSorted() === "asc"
+                        ? "▲"
+                        : column.getIsSorted() === "desc"
+                        ? "▼"
+                        : ""}
+                </div>
+            ),
+            enableSorting: true, // Aktifkan sorting pada kolom ini
         }),
         columnHelper.accessor("phone", {
             cell: (info) => <span className="">{info.getValue()}</span>,
@@ -125,7 +142,16 @@ function RespondenTable() {
         manualPagination: true, // Aktifkan pagination manual (server-side)
         pageCount: Math.ceil(totalData / pageSize), // Total halaman dari backend
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     })
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen((prev) => !prev)
+    }
+
+    const closeDropdown = () => {
+        setIsDropdownOpen(false)
+    }
 
     return (
         <>
@@ -141,6 +167,75 @@ function RespondenTable() {
                         placeholder="Cari responden..."
                         className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ring-1 ring-muted-foreground"
                     />
+                    <div className="relative">
+                        {/* Tombol untuk membuka dropdown */}
+                        <button
+                            onClick={toggleDropdown}
+                            className="px-4 py-2 text-white rounded-md bg-primary"
+                        >
+                            Sort
+                        </button>
+
+                        {/* Dropdown hanya terlihat jika `isDropdownOpen` true */}
+                        {isDropdownOpen && (
+                            <div className="absolute right-0 w-40 mt-2 bg-white border rounded-md shadow-lg">
+                                <div
+                                    onClick={() => {
+                                        setSorting([
+                                            { id: "name", desc: false },
+                                        ])
+                                        closeDropdown()
+                                    }}
+                                    className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+                                        sorting.length &&
+                                        sorting[0].id === "name" &&
+                                        !sorting[0].desc
+                                            ? ""
+                                            : ""
+                                    }`}
+                                >
+                                    Nama (A-Z)
+                                </div>
+                                <div
+                                    onClick={() => {
+                                        setSorting([{ id: "name", desc: true }])
+                                        closeDropdown()
+                                    }}
+                                    className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+                                        sorting.length &&
+                                        sorting[0].id === "name" &&
+                                        sorting[0].desc
+                                            ? ""
+                                            : ""
+                                    }`}
+                                >
+                                    Nama (Z-A)
+                                </div>
+                                <div
+                                    onClick={
+                                        () =>
+                                            setSorting([
+                                                { id: "age", desc: false },
+                                            ]) // Sorting by Age (Ascending)
+                                    }
+                                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                >
+                                    Umur (Terkecil)
+                                </div>
+                                <div
+                                    onClick={
+                                        () =>
+                                            setSorting([
+                                                { id: "age", desc: true },
+                                            ]) // Sorting by Age (Descending)
+                                    }
+                                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                >
+                                    Umur (Terbesar)
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <div className="overflow-x-auto text-left">
