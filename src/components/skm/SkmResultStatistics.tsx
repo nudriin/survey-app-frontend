@@ -161,13 +161,18 @@ export default function SkmResultStatistics() {
                     index: number
                 ) => {
                     // Calculate NRR
-                    const nrr = (
-                        question.responses.reduce(
-                            (total: any, opt: { select_option: any }) =>
-                                total + (opt.select_option ?? 4),
-                            0
-                        ) / question.responses.length
-                    ).toFixed(3)
+                    const nrr =
+                        question.responses.length > 0
+                            ? (
+                                  question.responses.reduce(
+                                      (
+                                          total: any,
+                                          opt: { select_option: any }
+                                      ) => total + (opt.select_option ?? 4),
+                                      0
+                                  ) / question.responses.length
+                              ).toFixed(3)
+                            : "0.000"
 
                     // Determine the "Keterangan" based on NRR value
                     let keterangan
@@ -217,7 +222,9 @@ export default function SkmResultStatistics() {
                 (question: {
                     responses: { [x: string]: { select_option: any } }
                 }) => {
-                    row.push(question.responses[index].select_option ?? 4)
+                    const selectOption =
+                        question.responses[index]?.select_option ?? 4
+                    row.push(selectOption)
                 }
             )
             resultTableData.push(row)
@@ -238,13 +245,16 @@ export default function SkmResultStatistics() {
         // NRR/Unsur row
         const nrrUnsurRow = ["NRR/Unsur"]
         responsesQuestion.forEach((value: { responses: any[] }) => {
-            const nrr = (
-                value.responses.reduce(
-                    (sum: any, opt: { select_option: any }) =>
-                        sum + (opt.select_option ?? 4),
-                    0
-                ) / value.responses.length
-            ).toFixed(3)
+            const nrr =
+                value.responses.length > 0
+                    ? (
+                          value.responses.reduce(
+                              (sum: any, opt: { select_option: any }) =>
+                                  sum + (opt.select_option ?? 4),
+                              0
+                          ) / value.responses.length
+                      ).toFixed(3)
+                    : "0.000"
             nrrUnsurRow.push(nrr)
         })
         resultTableData.push(nrrUnsurRow)
@@ -252,15 +262,18 @@ export default function SkmResultStatistics() {
         // NRR Tertimbang row
         const nrrTertimbangRow = ["NRR Tertimbang"]
         responsesQuestion.forEach((value: { responses: any[] }) => {
-            const nrrTertimbang = (
-                (value.responses.reduce(
-                    (sum: any, opt: { select_option: any }) =>
-                        sum + (opt.select_option ?? 4),
-                    0
-                ) /
-                    value.responses.length) *
-                0.111
-            ).toFixed(3)
+            const nrrTertimbang =
+                value.responses.length > 0
+                    ? (
+                          (value.responses.reduce(
+                              (sum: any, opt: { select_option: any }) =>
+                                  sum + (opt.select_option ?? 4),
+                              0
+                          ) /
+                              value.responses.length) *
+                          0.111
+                      ).toFixed(3)
+                    : "0.000"
             nrrTertimbangRow.push(nrrTertimbang)
         })
         resultTableData.push(nrrTertimbangRow)
@@ -270,6 +283,9 @@ export default function SkmResultStatistics() {
         const ikmUnitValue = (
             responsesQuestion.reduce(
                 (grandTotal: number, value: { responses: any[] }) => {
+                    if (value.responses.length === 0) {
+                        return grandTotal
+                    }
                     const nrrTertimbang =
                         (value.responses.reduce(
                             (sum: any, opt: { select_option: any }) =>
@@ -294,13 +310,16 @@ export default function SkmResultStatistics() {
         // NrrBarChart Sheet
         const chartData = responsesQuestion.map(
             (item: { responses: any[] }, index: number) => {
-                const averageValue = (
-                    item.responses.reduce(
-                        (total: any, opt: { select_option: any }) =>
-                            total + (opt.select_option ?? 4),
-                        0
-                    ) / item.responses.length
-                ).toFixed(3)
+                const averageValue =
+                    item.responses.length > 0
+                        ? (
+                              item.responses.reduce(
+                                  (total: any, opt: { select_option: any }) =>
+                                      total + (opt.select_option ?? 4),
+                                  0
+                              ) / item.responses.length
+                          ).toFixed(3)
+                        : "0.000"
 
                 return [`U${index + 1}`, averageValue]
             }
